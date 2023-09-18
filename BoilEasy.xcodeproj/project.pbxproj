@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1355641D2AB8CB7300B90AB3 /* text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1355641C2AB8CB7300B90AB3 /* text.swift */; };
 		13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */; };
 		13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */; };
 		13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D45A2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoilEasy_BoilEasyUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1355641C2AB8CB7300B90AB3 /* text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = text.swift; sourceTree = "<group>"; };
 		13E3D44E2AB8BCB1004B13C7 /* BoilEasy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoilEasy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				13E3D4882AB8BD55004B13C7 /* MainViewController.swift */,
+				1355641C2AB8CB7300B90AB3 /* text.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -183,7 +186,6 @@
 				5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */,
 				36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -437,6 +439,7 @@
 				13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */,
 				13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */,
 				13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */,
+				1355641D2AB8CB7300B90AB3 /* text.swift in Sources */,
 				13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
