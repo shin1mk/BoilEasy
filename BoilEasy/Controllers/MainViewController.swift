@@ -11,7 +11,6 @@ final class MainViewController: UIViewController {
     //MARK: Properties
     private let labels = ["Soft", "Medium", "Hard"]
     private var currentIndex = 1
-
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,9 +18,7 @@ final class MainViewController: UIViewController {
         createLabels()
         setupGestures()
     }
-
-    //MARK: Methods
-
+    //MARK: - Methods
     // Функция для создания лейбла
     private func createLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
@@ -34,13 +31,12 @@ final class MainViewController: UIViewController {
     private func createLabels() {
         for (index, labelText) in labels.enumerated() {
             let label = createLabel(text: labelText, tag: index)
-            setupLabelConstraints(label, index: index)
+            setupConstraints(label, index: index)
             label.textColor = index == currentIndex ? .white : .gray
         }
     }
-
-    // Функция для создания и установки констрейнтов для лейбла
-    private func setupLabelConstraints(_ label: UILabel, index: Int) {
+    //MARK: - Constraints
+    private func setupConstraints(_ label: UILabel, index: Int) {
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.width.equalTo(view)
@@ -49,25 +45,21 @@ final class MainViewController: UIViewController {
             make.centerY.equalTo(view).offset(100)
         }
     }
-
-
-
+    //MARK: - Gestures
     private func setupGestures() {
         // Тап
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         view.addGestureRecognizer(tapGesture)
-
         // Жесты для свайпа влево
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
         swipeLeft.direction = .left
         view.addGestureRecognizer(swipeLeft)
-
         // Жесты для свайпа вправо
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
     }
-
+    //MARK: - handleSwipe
     @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
         case .left:
@@ -79,10 +71,10 @@ final class MainViewController: UIViewController {
         }
         animateLabels()
     }
-
+    //MARK: - handleTap
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         let tapLocation = gesture.location(in: view)
-        for (index, label) in view.subviews.enumerated() {
+        for (_, label) in view.subviews.enumerated() {
             if let label = label as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex {
                 currentIndex = label.tag
                 animateLabels()
@@ -90,7 +82,7 @@ final class MainViewController: UIViewController {
             }
         }
     }
-
+    //MARK: - Animate
     private func animateLabels() {
         UIView.animate(withDuration: 0.3) {
             for (index, label) in self.view.subviews.enumerated() {
