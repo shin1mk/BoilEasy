@@ -9,14 +9,15 @@
 /* Begin PBXBuildFile section */
 		13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */; };
 		13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */; };
-		13E3D4562AB8BCB1004B13C7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4552AB8BCB1004B13C7 /* ViewController.swift */; };
-		13E3D4592AB8BCB1004B13C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13E3D4572AB8BCB1004B13C7 /* Main.storyboard */; };
 		13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D45A2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld */; };
 		13E3D45E2AB8BCB2004B13C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13E3D45D2AB8BCB2004B13C7 /* Assets.xcassets */; };
-		13E3D4612AB8BCB2004B13C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13E3D45F2AB8BCB2004B13C7 /* LaunchScreen.storyboard */; };
 		13E3D46C2AB8BCB2004B13C7 /* BoilEasyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D46B2AB8BCB2004B13C7 /* BoilEasyTests.swift */; };
 		13E3D4762AB8BCB2004B13C7 /* BoilEasyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */; };
 		13E3D4782AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */; };
+		13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4882AB8BD55004B13C7 /* MainViewController.swift */; };
+		9070E2D6F49E79212612227A /* Pods_BoilEasy_BoilEasyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */; };
+		C917621AE2BB8E5F4004D33F /* Pods_BoilEasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D29232183EB2A7B64D7A56A1 /* Pods_BoilEasy.framework */; };
+		EE76B0BDD43782C3ACF4BFA6 /* Pods_BoilEasyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2023A9EC49536EB24DE2A4F /* Pods_BoilEasyTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,20 +38,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoilEasy_BoilEasyUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D44E2AB8BCB1004B13C7 /* BoilEasy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoilEasy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		13E3D4552AB8BCB1004B13C7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		13E3D4582AB8BCB1004B13C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		13E3D45B2AB8BCB1004B13C7 /* BoilEasy.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BoilEasy.xcdatamodel; sourceTree = "<group>"; };
 		13E3D45D2AB8BCB2004B13C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		13E3D4602AB8BCB2004B13C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		13E3D4622AB8BCB2004B13C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		13E3D4672AB8BCB2004B13C7 /* BoilEasyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoilEasyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D46B2AB8BCB2004B13C7 /* BoilEasyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyTests.swift; sourceTree = "<group>"; };
 		13E3D4712AB8BCB2004B13C7 /* BoilEasyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoilEasyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITests.swift; sourceTree = "<group>"; };
 		13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		13E3D4882AB8BD55004B13C7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		188A5E56635D58B6F1B0A9DC /* Pods-BoilEasy-BoilEasyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.release.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.release.xcconfig"; sourceTree = "<group>"; };
+		5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C140D73144EE595269A1033C /* Pods-BoilEasy-BoilEasyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy-BoilEasyUITests.release.xcconfig"; path = "Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests.release.xcconfig"; sourceTree = "<group>"; };
+		CA9E4FDF1A444FFE78E8CF1B /* Pods-BoilEasy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasy/Pods-BoilEasy.debug.xcconfig"; sourceTree = "<group>"; };
+		D29232183EB2A7B64D7A56A1 /* Pods_BoilEasy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoilEasy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2023A9EC49536EB24DE2A4F /* Pods_BoilEasyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoilEasyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6D6413B1DCEEA12A79F484E /* Pods-BoilEasy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy.release.xcconfig"; path = "Target Support Files/Pods-BoilEasy/Pods-BoilEasy.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C917621AE2BB8E5F4004D33F /* Pods_BoilEasy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE76B0BDD43782C3ACF4BFA6 /* Pods_BoilEasyTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9070E2D6F49E79212612227A /* Pods_BoilEasy_BoilEasyUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +96,8 @@
 				13E3D46A2AB8BCB2004B13C7 /* BoilEasyTests */,
 				13E3D4742AB8BCB2004B13C7 /* BoilEasyUITests */,
 				13E3D44F2AB8BCB1004B13C7 /* Products */,
+				60090E0EE40F6238E7C0CA52 /* Pods */,
+				9A037E73D6087D811F9A617B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,14 +114,9 @@
 		13E3D4502AB8BCB1004B13C7 /* BoilEasy */ = {
 			isa = PBXGroup;
 			children = (
-				13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */,
-				13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */,
-				13E3D4552AB8BCB1004B13C7 /* ViewController.swift */,
-				13E3D4572AB8BCB1004B13C7 /* Main.storyboard */,
-				13E3D45D2AB8BCB2004B13C7 /* Assets.xcassets */,
-				13E3D45F2AB8BCB2004B13C7 /* LaunchScreen.storyboard */,
-				13E3D4622AB8BCB2004B13C7 /* Info.plist */,
-				13E3D45A2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld */,
+				13E3D4862AB8BD0A004B13C7 /* Resources */,
+				13E3D4852AB8BD03004B13C7 /* Application */,
+				13E3D4842AB8BCFC004B13C7 /* Controllers */,
 			);
 			path = BoilEasy;
 			sourceTree = "<group>";
@@ -130,6 +138,65 @@
 			path = BoilEasyUITests;
 			sourceTree = "<group>";
 		};
+		13E3D4842AB8BCFC004B13C7 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				13E3D4882AB8BD55004B13C7 /* MainViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		13E3D4852AB8BD03004B13C7 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */,
+				13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		13E3D4862AB8BD0A004B13C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				13E3D4872AB8BD1E004B13C7 /* Fonts */,
+				13E3D45D2AB8BCB2004B13C7 /* Assets.xcassets */,
+				13E3D4622AB8BCB2004B13C7 /* Info.plist */,
+				13E3D45A2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		13E3D4872AB8BD1E004B13C7 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		60090E0EE40F6238E7C0CA52 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CA9E4FDF1A444FFE78E8CF1B /* Pods-BoilEasy.debug.xcconfig */,
+				F6D6413B1DCEEA12A79F484E /* Pods-BoilEasy.release.xcconfig */,
+				188A5E56635D58B6F1B0A9DC /* Pods-BoilEasy-BoilEasyUITests.debug.xcconfig */,
+				C140D73144EE595269A1033C /* Pods-BoilEasy-BoilEasyUITests.release.xcconfig */,
+				5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */,
+				36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		9A037E73D6087D811F9A617B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D29232183EB2A7B64D7A56A1 /* Pods_BoilEasy.framework */,
+				1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */,
+				F2023A9EC49536EB24DE2A4F /* Pods_BoilEasyTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -137,9 +204,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13E3D47B2AB8BCB2004B13C7 /* Build configuration list for PBXNativeTarget "BoilEasy" */;
 			buildPhases = (
+				2FC312D50832616115375D39 /* [CP] Check Pods Manifest.lock */,
 				13E3D44A2AB8BCB1004B13C7 /* Sources */,
 				13E3D44B2AB8BCB1004B13C7 /* Frameworks */,
 				13E3D44C2AB8BCB1004B13C7 /* Resources */,
+				FF5C46D688589A6BA8495847 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -154,6 +223,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13E3D47E2AB8BCB2004B13C7 /* Build configuration list for PBXNativeTarget "BoilEasyTests" */;
 			buildPhases = (
+				810D36D50C3CE9D7927CDD61 /* [CP] Check Pods Manifest.lock */,
 				13E3D4632AB8BCB2004B13C7 /* Sources */,
 				13E3D4642AB8BCB2004B13C7 /* Frameworks */,
 				13E3D4652AB8BCB2004B13C7 /* Resources */,
@@ -172,9 +242,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13E3D4812AB8BCB2004B13C7 /* Build configuration list for PBXNativeTarget "BoilEasyUITests" */;
 			buildPhases = (
+				E07027DEC3E4C8AD0BAA8513 /* [CP] Check Pods Manifest.lock */,
 				13E3D46D2AB8BCB2004B13C7 /* Sources */,
 				13E3D46E2AB8BCB2004B13C7 /* Frameworks */,
 				13E3D46F2AB8BCB2004B13C7 /* Resources */,
+				DB31AD287C2919479B88A058 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -234,9 +306,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13E3D4612AB8BCB2004B13C7 /* LaunchScreen.storyboard in Resources */,
 				13E3D45E2AB8BCB2004B13C7 /* Assets.xcassets in Resources */,
-				13E3D4592AB8BCB1004B13C7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,15 +326,118 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2FC312D50832616115375D39 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoilEasy-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		810D36D50C3CE9D7927CDD61 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoilEasyTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DB31AD287C2919479B88A058 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E07027DEC3E4C8AD0BAA8513 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BoilEasy-BoilEasyUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF5C46D688589A6BA8495847 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoilEasy/Pods-BoilEasy-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BoilEasy/Pods-BoilEasy-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BoilEasy/Pods-BoilEasy-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		13E3D44A2AB8BCB1004B13C7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13E3D4562AB8BCB1004B13C7 /* ViewController.swift in Sources */,
 				13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */,
 				13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */,
 				13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */,
+				13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,25 +472,6 @@
 			targetProxy = 13E3D4722AB8BCB2004B13C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		13E3D4572AB8BCB1004B13C7 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13E3D4582AB8BCB1004B13C7 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		13E3D45F2AB8BCB2004B13C7 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13E3D4602AB8BCB2004B13C7 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		13E3D4792AB8BCB2004B13C7 /* Debug */ = {
@@ -370,7 +524,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -424,7 +578,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -436,18 +590,20 @@
 		};
 		13E3D47C2AB8BCB2004B13C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA9E4FDF1A444FFE78E8CF1B /* Pods-BoilEasy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BoilEasy/Info.plist;
+				INFOPLIST_FILE = BoilEasy/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -455,26 +611,31 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.BoilEasy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		13E3D47D2AB8BCB2004B13C7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F6D6413B1DCEEA12A79F484E /* Pods-BoilEasy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BoilEasy/Info.plist;
+				INFOPLIST_FILE = BoilEasy/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -482,14 +643,18 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = code.BoilEasy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		13E3D47F2AB8BCB2004B13C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -509,6 +674,7 @@
 		};
 		13E3D4802AB8BCB2004B13C7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -528,6 +694,7 @@
 		};
 		13E3D4822AB8BCB2004B13C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 188A5E56635D58B6F1B0A9DC /* Pods-BoilEasy-BoilEasyUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -545,6 +712,7 @@
 		};
 		13E3D4832AB8BCB2004B13C7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C140D73144EE595269A1033C /* Pods-BoilEasy-BoilEasyUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

@@ -1,0 +1,6 @@
+framework module Pods_BoilEasyTests {
+  umbrella header "Pods-BoilEasyTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
