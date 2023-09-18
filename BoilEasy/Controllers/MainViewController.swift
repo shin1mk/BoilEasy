@@ -9,25 +9,24 @@ import SnapKit
 
 final class MainViewController: UIViewController {
     //MARK: Properties
-    private let labels = ["Soft", "Medium", "Hard"]
+    private let difficultyOptions = ["Soft", "Medium", "Hard"]
     private var currentIndex = 1
     
+    private var timer: Timer?
+    private var secondsRemaining = 5 * 60 // Устанавливаем начальное время в 5 минут (5 * 60 секунд)
+    private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     
-    var timer: Timer?
-    var secondsRemaining = 5 * 60 // Устанавливаем начальное время в 5 минут (5 * 60 секунд)
-    var isTimerRunning = false // Переменная для отслеживания состояния таймера
-
-    let timerLabel: UILabel = {
+    private let timerLabel: UILabel = {
         let label = UILabel()
         label.text = "05:00"
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         return label
     }()
-    let startButton: UIButton = {
+    private let startButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Старт", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
+        button.setTitle("Start", for: .normal)
+        button.setTitleColor(.white, for: .normal)
         return button
     }()
     //MARK: Lifecycle
@@ -35,11 +34,10 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         createLabels()
         setupGestures()
-        
-        target()
+        addTarget()
     }
     //MARK: - Methods
-    // созданиe лейбла
+    // create Label
     private func createLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -48,36 +46,42 @@ final class MainViewController: UIViewController {
         label.tag = tag
         return label
     }
-    
+    // create Labels
     private func createLabels() {
-        for (index, labelText) in labels.enumerated() {
+        for (index, labelText) in difficultyOptions.enumerated() {
             let label = createLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
             label.textColor = index == currentIndex ? .white : .gray
         }
     }
     //MARK: - Constraints
-    private func setupConstraints(_ label: UILabel, index: Int) {
+    private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
         view.backgroundColor = .darkGray
-        
-        view.addSubview(label)
-        label.snp.makeConstraints { make in
+        // difficultyOptions
+        view.addSubview(difficultyOptions)
+        difficultyOptions.snp.makeConstraints { make in
             make.width.equalTo(view)
             make.height.equalTo(50)
             make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
             make.top.equalTo(view).offset(100)
         }
+        // timerLabel
         view.addSubview(timerLabel)
-        timerLabel.snp.makeConstraints { (make) in
+        timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
             make.width.equalTo(view).multipliedBy(0.8)
         }
+        // startButton
         view.addSubview(startButton)
-        startButton.snp.makeConstraints { (make) in
+        startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timerLabel.snp.bottom).offset(20) // Размещаем кнопку под меткой таймера
+            make.top.equalTo(timerLabel.snp.bottom).offset(20)
         }
+    }
+    //MARK: - Target
+    private func addTarget() {
+        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
     }
     //MARK: - Gestures
     private func setupGestures() {
@@ -97,9 +101,9 @@ final class MainViewController: UIViewController {
     @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
         case .left:
-            currentIndex = (currentIndex + 1) % labels.count
+            currentIndex = (currentIndex + 1) % difficultyOptions.count
         case .right:
-            currentIndex = (currentIndex - 1 + labels.count) % labels.count
+            currentIndex = (currentIndex - 1 + difficultyOptions.count) % difficultyOptions.count
         default:
             break
         }
@@ -130,28 +134,28 @@ final class MainViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    //MARK: - timer
-    @objc func startButtonTapped() {
+    //MARK: - Timer
+    @objc private func startButtonTapped() {
         if isTimerRunning {
             pauseTimer()
         } else {
             startTimer()
         }
     }
-    
-    func startTimer() {
+    // start Timer
+    private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("Пауза", for: .normal) // Меняем текст кнопки на "Пауза"
+        startButton.setTitle("Pause", for: .normal) // Меняем текст кнопки на "Пауза"
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
-    
-    func pauseTimer() {
-         isTimerRunning = false
-         startButton.setTitle("Продолжить", for: .normal) // Меняем текст кнопки на "Продолжить"
-         timer?.invalidate() // Останавливаем таймер
-     }
-    
-    @objc func updateTimer() {
+    // pause Timer
+    private func pauseTimer() {
+        isTimerRunning = false
+        startButton.setTitle("Continue", for: .normal) // Меняем текст кнопки на "Продолжить"
+        timer?.invalidate() // Останавливаем таймер
+    }
+    // update Timer
+    @objc private func updateTimer() {
         if secondsRemaining > 0 {
             secondsRemaining -= 1
             updateTimerLabel()
@@ -159,18 +163,11 @@ final class MainViewController: UIViewController {
             pauseTimer() // Останавливаем таймер, когда время истекло
         }
     }
-    
-    func updateTimerLabel() {
+    // update Timer Label
+    private func updateTimerLabel() {
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
     }
-    
-    private func target() {
-        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-
-    }
-
-
 } // end
