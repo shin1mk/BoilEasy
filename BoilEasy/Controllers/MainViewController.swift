@@ -14,15 +14,15 @@ final class MainViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .darkGray
         createLabels()
         setupGestures()
     }
     //MARK: - Methods
-    // Функция для создания лейбла
+    // созданиe лейбла
     private func createLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
         label.text = text
+        label.font = UIFont.systemFont(ofSize: 24)
         label.textAlignment = .center
         label.tag = tag
         return label
@@ -37,12 +37,14 @@ final class MainViewController: UIViewController {
     }
     //MARK: - Constraints
     private func setupConstraints(_ label: UILabel, index: Int) {
+        view.backgroundColor = .darkGray
+
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.width.equalTo(view)
             make.height.equalTo(50)
             make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
-            make.centerY.equalTo(view).offset(100)
+            make.top.equalTo(view).offset(100)
         }
     }
     //MARK: - Gestures
@@ -96,4 +98,4 @@ final class MainViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-}
+} // end
