@@ -50,8 +50,17 @@ final class MainViewController: UIViewController {
         setupGestures()
         addTarget()
         updateTimerLabelForCurrentDifficulty()
+        backgroundImage()
     }
     //MARK: - Methods
+    private func backgroundImage() {
+        let backgroundImage = UIImage(named: "background.png")
+        let backgroundImageView = UIImageView(image: backgroundImage)
+        backgroundImageView.contentMode = .scaleAspectFill // Вы можете выбрать нужный режим масштабирования
+        backgroundImageView.frame = view.bounds // Установите размеры фоновой картинки равными размерам вашего представления
+        backgroundImageView.layer.zPosition = 0
+        view.addSubview(backgroundImageView)
+    }
     // create Label
     private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
@@ -73,6 +82,7 @@ final class MainViewController: UIViewController {
     private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
         // difficultyOptions
         view.addSubview(difficultyOptions)
+        difficultyOptions.layer.zPosition = 1
         difficultyOptions.snp.makeConstraints { make in
             make.width.equalTo(view)
             make.height.equalTo(50)
@@ -81,6 +91,7 @@ final class MainViewController: UIViewController {
         }
         // timerLabel
         view.addSubview(timerLabel)
+        timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
@@ -88,6 +99,7 @@ final class MainViewController: UIViewController {
         }
         // startButton
         view.addSubview(startButton)
+        startButton.layer.zPosition = 1
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(timerLabel.snp.bottom).offset(20)
@@ -135,7 +147,8 @@ final class MainViewController: UIViewController {
             }
             currentIndex = label.tag
             animateLabels()
-            
+            updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
+
             if isTimerRunning {
                 stopTimer()
                 startTimer()
