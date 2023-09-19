@@ -10,26 +10,39 @@ import SnapKit
 final class MainViewController: UIViewController {
     //MARK: Properties
     private let difficultyOptions = ["Soft", "Medium", "Hard"]
+    private let imagesForDifficulties: [String: UIImage] = [
+        "Soft": UIImage(named: "soft.png")!,
+        "Medium": UIImage(named: "medium.png")!,
+        "Hard": UIImage(named: "hard.png")!
+    ]
     private var currentIndex = 1
     
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
-    private let timerDurations = [300, 480, 660] // Время в секундах: Soft - 5 минут, Medium - 8 минут, Hard - 11 минут
+    private let timerDurations = [360, 480, 660] // Время в секундах: Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     
     private let timerLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 30)
+        label.font = UIFont.SFUITextBold(ofSize: 35)
         label.textAlignment = .center
         return label
     }()
     private let startButton: UIButton = {
         let button = UIButton()
         button.setTitle("Start", for: .normal)
+        button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
+    
+    private let imageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "medium.png"))
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +55,10 @@ final class MainViewController: UIViewController {
         addTarget()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
+        // Установка изображения для imageView в зависимости от текущего уровня сложности
+        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
+            imageView.image = image
+        }
     }
     //MARK: - Methods
     private func backgroundImage() {
@@ -56,7 +73,7 @@ final class MainViewController: UIViewController {
     private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.SFUITextBold(ofSize: 22)
         label.textAlignment = .center
         label.tag = tag
         return label
@@ -80,13 +97,22 @@ final class MainViewController: UIViewController {
             make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
             make.top.equalTo(view).offset(100)
         }
+        // Размещаем imageView над timerLabel
+        view.addSubview(imageView)
+        imageView.layer.zPosition = 1
+        imageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.width.equalTo(512)
+            make.height.equalTo(512)
+        }
         // timerLabel
         view.addSubview(timerLabel)
         timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.width.equalTo(100)
+            make.bottom.equalToSuperview().offset(-150) // Отрицательное значение для закрепления от низа
+            make.width.equalTo(150)
         }
         // startButton
         view.addSubview(startButton)
@@ -222,5 +248,14 @@ final class MainViewController: UIViewController {
         let seconds = timerDurations[currentIndex] % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
+        
+        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
+             imageView.image = image
+         }
     }
 } // end
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
