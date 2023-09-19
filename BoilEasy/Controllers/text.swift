@@ -232,6 +232,7 @@ import UIKit
          createLabels()
          setupGestures()
          addTarget()
+         updateTimerLabelForCurrentDifficulty()
      }
      //MARK: - Methods
      // create Label
@@ -305,6 +306,8 @@ import UIKit
              break
          }
          animateLabels()
+         updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
+
      }
      //MARK: - handleTap
      @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -332,12 +335,17 @@ import UIKit
                      label.snp.updateConstraints { make in
                          make.centerX.equalTo(self.view).offset(CGFloat(index - self.currentIndex) * (self.view.frame.width / 3))
                      }
-                     label.textColor = index == self.currentIndex ? .white : .gray
+                     if label == self.timerLabel {
+                         label.textColor = .white // Сохраняем цвет timerLabel белым
+                     } else {
+                         label.textColor = index == self.currentIndex ? .white : .gray
+                     }
                  }
              }
              self.view.layoutIfNeeded()
          }
      }
+
      //MARK: - Timer
      @objc private func startButtonTapped() {
          if isTimerRunning {
@@ -373,6 +381,13 @@ import UIKit
      private func updateTimerLabel() {
          let minutes = secondsRemaining / 60
          let seconds = secondsRemaining % 60
+         let timeString = String(format: "%02d:%02d", minutes, seconds)
+         timerLabel.text = timeString
+     }
+     // Обновить timerLabel для текущей сложности
+     private func updateTimerLabelForCurrentDifficulty() {
+         let minutes = timerDurations[currentIndex] / 60
+         let seconds = timerDurations[currentIndex] % 60
          let timeString = String(format: "%02d:%02d", minutes, seconds)
          timerLabel.text = timeString
      }
