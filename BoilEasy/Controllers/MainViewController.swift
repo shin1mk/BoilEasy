@@ -13,11 +13,18 @@ final class MainViewController: UIViewController {
     private var currentIndex = 1
     
     private var timer: Timer?
-    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 5 минут (5 * 60 секунд)
+    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
-    
     private let timerDurations = [300, 480, 660] // Время в секундах: Soft - 5 минут, Medium - 8 минут, Hard - 11 минут
-
+    
+    //    private let titleLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "What kind of egg do you want to boil?"
+    //        label.font = UIFont.systemFont(ofSize: 22)
+    //        label.textAlignment = .center
+    //        label.textColor = .systemOrange
+    //        return label
+    //    }()
     private let timerLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -27,14 +34,19 @@ final class MainViewController: UIViewController {
     }()
     private let startButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Start", for: .normal)
+        button.setTitle("START", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        createLabels()
+        view.backgroundColor = .darkGray
+        setupUI()
+    }
+    // MARK: - UI Setup
+    private func setupUI() {
+        setupLabels()
         setupGestures()
         addTarget()
         updateTimerLabelForCurrentDifficulty()
@@ -50,7 +62,7 @@ final class MainViewController: UIViewController {
         return label
     }
     // create Labels
-    private func createLabels() {
+    private func setupLabels() {
         for (index, labelText) in difficultyOptions.enumerated() {
             let label = createLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
@@ -59,7 +71,6 @@ final class MainViewController: UIViewController {
     }
     //MARK: - Constraints
     private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
-        view.backgroundColor = .darkGray
         // difficultyOptions
         view.addSubview(difficultyOptions)
         difficultyOptions.snp.makeConstraints { make in
@@ -112,7 +123,6 @@ final class MainViewController: UIViewController {
         }
         animateLabels()
         updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
-
     }
     //MARK: - handleTap
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -126,12 +136,10 @@ final class MainViewController: UIViewController {
                     pauseTimer()
                     startTimer()
                 }
-                
                 break
             }
         }
     }
-
     //MARK: - Animate
     private func animateLabels() {
         UIView.animate(withDuration: 0.3) {
@@ -150,7 +158,6 @@ final class MainViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-
     //MARK: - Timer
     @objc private func startButtonTapped() {
         if isTimerRunning {
