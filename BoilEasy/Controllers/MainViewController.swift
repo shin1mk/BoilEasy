@@ -34,7 +34,7 @@ final class MainViewController: UIViewController {
     }()
     private let startButton: UIButton = {
         let button = UIButton()
-        button.setTitle("START", for: .normal)
+        button.setTitle("Start", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -46,14 +46,14 @@ final class MainViewController: UIViewController {
     }
     // MARK: - UI Setup
     private func setupUI() {
-        setupLabels()
+        setupDifficultyLabels()
         setupGestures()
         addTarget()
         updateTimerLabelForCurrentDifficulty()
     }
     //MARK: - Methods
     // create Label
-    private func createLabel(text: String, tag: Int) -> UILabel {
+    private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
         label.text = text
         label.font = UIFont.systemFont(ofSize: 24)
@@ -62,9 +62,9 @@ final class MainViewController: UIViewController {
         return label
     }
     // create Labels
-    private func setupLabels() {
+    private func setupDifficultyLabels() {
         for (index, labelText) in difficultyOptions.enumerated() {
-            let label = createLabel(text: labelText, tag: index)
+            let label = createDifficultyLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
             label.textColor = index == currentIndex ? .white : .gray
         }
@@ -121,23 +121,26 @@ final class MainViewController: UIViewController {
         default:
             break
         }
+        
         animateLabels()
         updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
     }
     //MARK: - handleTap
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         let tapLocation = gesture.location(in: view)
-        for (_, label) in view.subviews.enumerated() {
-            if let label = label as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex {
-                currentIndex = label.tag
-                animateLabels()
-                // При выборе сложности также обновите продолжительность таймера
-                if isTimerRunning {
-                    pauseTimer()
-                    startTimer()
-                }
-                break
+        
+        for (_, subview) in view.subviews.enumerated() {
+            guard let label = subview as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex else {
+                continue
             }
+            currentIndex = label.tag
+            animateLabels()
+            
+            if isTimerRunning {
+                stopTimer()
+                startTimer()
+            }
+            break
         }
     }
     //MARK: - Animate
@@ -161,24 +164,32 @@ final class MainViewController: UIViewController {
     //MARK: - Timer
     @objc private func startButtonTapped() {
         if isTimerRunning {
-            pauseTimer()
+            stopTimer()
         } else {
             startTimer()
+        }
+        // Включение/отключение жестов в зависимости от состояния таймера
+        let gesturesEnabled = !isTimerRunning
+        view.gestureRecognizers?.forEach { gesture in
+            gesture.isEnabled = gesturesEnabled
         }
     }
     // start Timer
     private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("Pause", for: .normal)
+        startButton.setTitle("Stop", for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         updateTimerLabel()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
-    // pause Timer
-    private func pauseTimer() {
+    // stop Timer
+    private func stopTimer() {
         isTimerRunning = false
-        startButton.setTitle("Continue", for: .normal) // Меняем текст кнопки на "Продолжить"
-        timer?.invalidate() // Останавливаем таймер
+        startButton.setTitle("Start", for: .normal)
+        timer?.invalidate()
+        // Сбросить значение таймера на начальное
+        secondsRemaining = timerDurations[currentIndex]
+        updateTimerLabel()
     }
     // update Timer
     @objc private func updateTimer() {
@@ -186,7 +197,7 @@ final class MainViewController: UIViewController {
             secondsRemaining -= 1
             updateTimerLabel()
         } else {
-            pauseTimer() // Останавливаем таймер, когда время истекло
+            stopTimer() // Останавливаем таймер, когда время истекло
         }
     }
     // update Timer Label
