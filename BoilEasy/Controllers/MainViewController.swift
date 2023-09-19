@@ -13,12 +13,14 @@ final class MainViewController: UIViewController {
     private var currentIndex = 1
     
     private var timer: Timer?
-    private var secondsRemaining = 5 * 60 // Устанавливаем начальное время в 5 минут (5 * 60 секунд)
+    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 5 минут (5 * 60 секунд)
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     
+    private let timerDurations = [300, 480, 660] // Время в секундах: Soft - 5 минут, Medium - 8 минут, Hard - 11 минут
+
     private let timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "05:00"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         return label
@@ -116,10 +118,17 @@ final class MainViewController: UIViewController {
             if let label = label as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex {
                 currentIndex = label.tag
                 animateLabels()
+                // При выборе сложности также обновите продолжительность таймера
+                if isTimerRunning {
+                    pauseTimer()
+                    startTimer()
+                }
+                
                 break
             }
         }
     }
+
     //MARK: - Animate
     private func animateLabels() {
         UIView.animate(withDuration: 0.3) {
@@ -145,7 +154,9 @@ final class MainViewController: UIViewController {
     // start Timer
     private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("Pause", for: .normal) // Меняем текст кнопки на "Пауза"
+        startButton.setTitle("Pause", for: .normal)
+        secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
+        updateTimerLabel()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     // pause Timer
