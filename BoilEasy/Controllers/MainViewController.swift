@@ -158,7 +158,7 @@ final class MainViewController: UIViewController {
                     if label == self.timerLabel {
                         label.textColor = .white
                     } else {
-                        label.textColor = index == self.currentIndex ? .white : .gray
+                        label.textColor = index == self.currentIndex ? .white : .systemGray
                     }
                 }
             }
