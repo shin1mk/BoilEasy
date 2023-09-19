@@ -211,14 +211,6 @@
      private var isTimerRunning = false // Переменная для отслеживания состояния таймера
      private let timerDurations = [300, 480, 660] // Время в секундах: Soft - 5 минут, Medium - 8 минут, Hard - 11 минут
      
-     //    private let titleLabel: UILabel = {
-     //        let label = UILabel()
-     //        label.text = "What kind of egg do you want to boil?"
-     //        label.font = UIFont.systemFont(ofSize: 22)
-     //        label.textAlignment = .center
-     //        label.textColor = .systemOrange
-     //        return label
-     //    }()
      private let timerLabel: UILabel = {
          let label = UILabel()
          label.text = ""
@@ -244,8 +236,17 @@
          setupGestures()
          addTarget()
          updateTimerLabelForCurrentDifficulty()
+         backgroundImage()
      }
      //MARK: - Methods
+     private func backgroundImage() {
+         let backgroundImage = UIImage(named: "background.png")
+         let backgroundImageView = UIImageView(image: backgroundImage)
+         backgroundImageView.contentMode = .scaleAspectFill // Вы можете выбрать нужный режим масштабирования
+         backgroundImageView.frame = view.bounds // Установите размеры фоновой картинки равными размерам вашего представления
+         backgroundImageView.layer.zPosition = 0
+         view.addSubview(backgroundImageView)
+     }
      // create Label
      private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
          let label = UILabel()
@@ -267,6 +268,7 @@
      private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
          // difficultyOptions
          view.addSubview(difficultyOptions)
+         difficultyOptions.layer.zPosition = 1
          difficultyOptions.snp.makeConstraints { make in
              make.width.equalTo(view)
              make.height.equalTo(50)
@@ -275,13 +277,15 @@
          }
          // timerLabel
          view.addSubview(timerLabel)
+         timerLabel.layer.zPosition = 1
          timerLabel.snp.makeConstraints { make in
              make.centerX.equalToSuperview()
              make.centerY.equalToSuperview()
-             make.width.equalTo(view).multipliedBy(0.8)
+             make.width.equalTo(100)
          }
          // startButton
          view.addSubview(startButton)
+         startButton.layer.zPosition = 1
          startButton.snp.makeConstraints { make in
              make.centerX.equalToSuperview()
              make.top.equalTo(timerLabel.snp.bottom).offset(20)
@@ -329,7 +333,8 @@
              }
              currentIndex = label.tag
              animateLabels()
-             
+             updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
+
              if isTimerRunning {
                  stopTimer()
                  startTimer()
@@ -338,23 +343,45 @@
          }
      }
      //MARK: - Animate
+ //    private func animateLabels() {
+ //        UIView.animate(withDuration: 0.5) {
+ //            for (index, label) in self.view.subviews.enumerated() {
+ //                if let label = label as? UILabel {
+ //                    // Обновляем цвет текста
+ //                    if label == self.timerLabel {
+ //                        label.textColor = .white
+ //                    } else {
+ //                        label.textColor = index == self.currentIndex ? .white : .gray
+ //                    }
+ //                }
+ //            }
+ //        }
+ //    }
      private func animateLabels() {
-         UIView.animate(withDuration: 0.3) {
+         UIView.animate(withDuration: 0.5) {
              for (index, label) in self.view.subviews.enumerated() {
                  if let label = label as? UILabel {
-                     label.snp.updateConstraints { make in
-                         make.centerX.equalTo(self.view).offset(CGFloat(index - self.currentIndex) * (self.view.frame.width / 3))
-                     }
+                     // Устанавливаем начальное значение альфа-канала
+                     label.alpha = 0.0
+
+                     // Обновляем цвет текста
                      if label == self.timerLabel {
-                         label.textColor = .white // Сохраняем цвет timerLabel белым
+                         label.textColor = .white
                      } else {
                          label.textColor = index == self.currentIndex ? .white : .gray
                      }
                  }
              }
-             self.view.layoutIfNeeded()
+
+             // Выполняем анимацию появления (установка альфа-канала на 1.0)
+             UIView.animate(withDuration: 0.5) {
+                 for label in self.view.subviews where label is UILabel {
+                     label.alpha = 1.0
+                 }
+             }
          }
      }
+
      //MARK: - Timer
      @objc private func startButtonTapped() {
          if isTimerRunning {
@@ -409,6 +436,5 @@
          timerLabel.text = timeString
      }
  } // end
-
 
 */

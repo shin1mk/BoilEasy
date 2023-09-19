@@ -17,14 +17,6 @@ final class MainViewController: UIViewController {
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     private let timerDurations = [300, 480, 660] // Время в секундах: Soft - 5 минут, Medium - 8 минут, Hard - 11 минут
     
-    //    private let titleLabel: UILabel = {
-    //        let label = UILabel()
-    //        label.text = "What kind of egg do you want to boil?"
-    //        label.font = UIFont.systemFont(ofSize: 22)
-    //        label.textAlignment = .center
-    //        label.textColor = .systemOrange
-    //        return label
-    //    }()
     private let timerLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -41,7 +33,6 @@ final class MainViewController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .darkGray
         setupUI()
     }
     // MARK: - UI Setup
@@ -95,7 +86,7 @@ final class MainViewController: UIViewController {
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.equalTo(view).multipliedBy(0.8)
+            make.width.equalTo(100)
         }
         // startButton
         view.addSubview(startButton)
@@ -158,20 +149,25 @@ final class MainViewController: UIViewController {
     }
     //MARK: - Animate
     private func animateLabels() {
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.7) {
             for (index, label) in self.view.subviews.enumerated() {
                 if let label = label as? UILabel {
-                    label.snp.updateConstraints { make in
-                        make.centerX.equalTo(self.view).offset(CGFloat(index - self.currentIndex) * (self.view.frame.width / 3))
-                    }
+                    // Устанавливаем начальное значение альфа-канала
+                    label.alpha = 0.0
+                    // Обновляем цвет текста
                     if label == self.timerLabel {
-                        label.textColor = .white // Сохраняем цвет timerLabel белым
+                        label.textColor = .white
                     } else {
                         label.textColor = index == self.currentIndex ? .white : .gray
                     }
                 }
             }
-            self.view.layoutIfNeeded()
+            // Выполняем анимацию появления (установка альфа-канала на 1.0)
+            UIView.animate(withDuration: 0.7) {
+                for label in self.view.subviews where label is UILabel {
+                    label.alpha = 1.0
+                }
+            }
         }
     }
     //MARK: - Timer
@@ -190,7 +186,7 @@ final class MainViewController: UIViewController {
     // start Timer
     private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("Stop", for: .normal)
+        startButton.setTitle("Cancel", for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         updateTimerLabel()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
