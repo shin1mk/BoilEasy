@@ -1,3 +1,4 @@
+
 //
 //  MainViewController.swift
 //  BoilEasy
@@ -59,7 +60,9 @@ final class MainViewController: UIViewController {
         updateImageViewForCurrentDifficulty()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
+
     }
+
     //MARK: - Methods
     private func backgroundImage() {
         let backgroundImage = UIImage(named: "background.png")
