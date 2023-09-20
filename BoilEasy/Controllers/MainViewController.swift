@@ -16,7 +16,10 @@ final class MainViewController: UIViewController {
         "Medium": UIImage(named: "medium.png")!,
         "Hard": UIImage(named: "hard.png")!
     ]
-    
+    // circle
+    private var shapeLayer: CAShapeLayer!
+    private var currentProgress: Float = 1.0 // Начнем с полной окружности
+
     private var currentIndex = 1 // текущий label
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
@@ -60,7 +63,27 @@ final class MainViewController: UIViewController {
         updateImageViewForCurrentDifficulty()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
+        setupCircleLayer()
+    }
+    private func setupCircleLayer() {
+        shapeLayer = CAShapeLayer()
+        let circularPath = UIBezierPath(
+            arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
+            radius: min(view.bounds.width, view.bounds.height) / 2 - 5,
+            startAngle: -.pi / 2,
+            endAngle: 2 * .pi - .pi / 2,
+            clockwise: true
+        )
+        shapeLayer.path = circularPath.cgPath
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.strokeColor = UIColor.white.cgColor
 
+        shapeLayer.lineWidth = 10
+        shapeLayer.lineCap = .round
+        shapeLayer.strokeEnd = 1
+
+        // Добавьте shapeLayer в вашу иерархию представлений
+        view.layer.addSublayer(shapeLayer)
     }
 
     //MARK: - Methods
@@ -183,7 +206,7 @@ final class MainViewController: UIViewController {
             animateImage()
             animateLabels()
             updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
-
+            
             if isTimerRunning {
                 stopTimer()
                 startTimer()
@@ -209,19 +232,28 @@ final class MainViewController: UIViewController {
             }
         }
     }
-
+    
     private func animateImage() {
         // Устанавливаем начальный альфа-канал равным 0
-         imageView.alpha = 0.0
-         // Анимация изменения альфа-канала для imageView
-         UIView.animate(withDuration: 0.5, animations: {
-             // Устанавливаем конечный альфа-канал равным 1 внутри блока анимации
-             self.imageView.alpha = 1.0
-         }) { _ in
-             // По завершении анимации, обновляем изображение
-             self.updateImageViewForCurrentDifficulty()
-         }
+        imageView.alpha = 0.0
+        // Анимация изменения альфа-канала для imageView
+        UIView.animate(withDuration: 0.5, animations: {
+            // Устанавливаем конечный альфа-канал равным 1 внутри блока анимации
+            self.imageView.alpha = 1.0
+        }) { _ in
+            // По завершении анимации, обновляем изображение
+            self.updateImageViewForCurrentDifficulty()
+        }
     }
+} // end
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
+extension MainViewController {
     //MARK: - Timer
     @objc private func startButtonTapped() {
         if isTimerRunning {
@@ -262,12 +294,31 @@ final class MainViewController: UIViewController {
         }
     }
     // update Timer Label
+//    private func updateTimerLabel() {
+//        let minutes = secondsRemaining / 60
+//        let seconds = secondsRemaining % 60
+//        let timeString = String(format: "%02d:%02d", minutes, seconds)
+//        timerLabel.text = timeString
+//    }
     private func updateTimerLabel() {
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
+        
+        // Обновление прогресса на основе оставшегося времени
+        let totalDuration = Float(timerDurations[currentIndex])
+        let remainingTime = Float(secondsRemaining)
+        currentProgress = 1.0 - (remainingTime / totalDuration)
+        
+        // Устанавливаем новое значение прогресса
+        setProgress(1.0 - currentProgress)
     }
+    // Устанавливает прогресс анимации окружности
+    private func setProgress(_ progress: Float) {
+        shapeLayer.strokeEnd = CGFloat(progress)
+    }
+
     // Обновить timerLabel для текущей сложности
     private func updateTimerLabelForCurrentDifficulty() {
         let minutes = timerDurations[currentIndex] / 60
@@ -276,11 +327,5 @@ final class MainViewController: UIViewController {
         timerLabel.text = timeString
         
         updateImageViewForCurrentDifficulty()
-    }
-} // end
-
-extension Array {
-    subscript(safe index: Int) -> Element? {
-        return indices.contains(index) ? self[index] : nil
     }
 }
