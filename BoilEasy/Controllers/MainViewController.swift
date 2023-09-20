@@ -66,26 +66,44 @@ final class MainViewController: UIViewController {
         setupCircleLayer()
     }
     private func setupCircleLayer() {
+        // Создаем CAShapeLayer, который будет использоваться для отображения круга
         shapeLayer = CAShapeLayer()
+        
+        // Создаем UIBezierPath для определения формы круга
         let circularPath = UIBezierPath(
+            // Центр круга
             arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
-            radius: min(view.bounds.width, view.bounds.height) / 2 - 5,
+            // Радиус круга (минимальное значение из ширины и высоты представления минус 5 пикселей для отступа)
+            radius: min(view.bounds.width, view.bounds.height) / 2 - 40,
+            // Угол старта (в данном случае, начинаем с верхней точки, то есть -π/2 радиан)
             startAngle: -.pi / 2,
+            // Угол завершения (завершаем в той же точке, где начали, то есть 2π - π/2 радиан)
             endAngle: 2 * .pi - .pi / 2,
+            // Направление обхода (по часовой стрелке)
             clockwise: true
         )
+        
+        // Устанавливаем путь круга для CAShapeLayer
         shapeLayer.path = circularPath.cgPath
+        
+        // Заливаем круг прозрачным цветом (fillColor)
         shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.strokeColor = UIColor.white.cgColor
 
+        // Устанавливаем цвет обводки круга (strokeColor)
+        shapeLayer.strokeColor = UIColor.white.cgColor
+        
+        // Устанавливаем толщину линии обводки
         shapeLayer.lineWidth = 10
+        
+        // Устанавливаем стиль концов линии (круглые концы)
         shapeLayer.lineCap = .round
+        
+        // Устанавливаем прогресс обводки на 1 (полный круг)
         shapeLayer.strokeEnd = 1
 
-        // Добавьте shapeLayer в вашу иерархию представлений
+        // Добавляем shapeLayer в иерархию представлений (как подслои для вашего контейнера/вида)
         view.layer.addSublayer(shapeLayer)
     }
-
     //MARK: - Methods
     private func backgroundImage() {
         let backgroundImage = UIImage(named: "background.png")
@@ -294,12 +312,6 @@ extension MainViewController {
         }
     }
     // update Timer Label
-//    private func updateTimerLabel() {
-//        let minutes = secondsRemaining / 60
-//        let seconds = secondsRemaining % 60
-//        let timeString = String(format: "%02d:%02d", minutes, seconds)
-//        timerLabel.text = timeString
-//    }
     private func updateTimerLabel() {
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
