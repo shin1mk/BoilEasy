@@ -14,6 +14,7 @@
 		1390571B2ABA5DB700EF40FE /* SFUIText-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 139057162ABA5DB700EF40FE /* SFUIText-Heavy.ttf */; };
 		1390571C2ABA5DB700EF40FE /* SFUIText-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 139057172ABA5DB700EF40FE /* SFUIText-Light.ttf */; };
 		1390571D2ABA5DB700EF40FE /* SFUIText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 139057182ABA5DB700EF40FE /* SFUIText-Regular.ttf */; };
+		139CC07C2ABB9AE00038D6CA /* CookingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139CC07B2ABB9ADF0038D6CA /* CookingState.swift */; };
 		13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */; };
 		13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */; };
 		13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D45A2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld */; };
@@ -54,6 +55,7 @@
 		139057162ABA5DB700EF40FE /* SFUIText-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFUIText-Heavy.ttf"; sourceTree = "<group>"; };
 		139057172ABA5DB700EF40FE /* SFUIText-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFUIText-Light.ttf"; sourceTree = "<group>"; };
 		139057182ABA5DB700EF40FE /* SFUIText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFUIText-Regular.ttf"; sourceTree = "<group>"; };
+		139CC07B2ABB9ADF0038D6CA /* CookingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookingState.swift; sourceTree = "<group>"; };
 		13E3D44E2AB8BCB1004B13C7 /* BoilEasy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoilEasy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E3D4512AB8BCB1004B13C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13E3D4532AB8BCB1004B13C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				13E3D4882AB8BD55004B13C7 /* MainViewController.swift */,
 				1355641C2AB8CB7300B90AB3 /* text.swift */,
 				13EBBC7C2ABAC3C90019116A /* TimerCircleView.swift */,
+				139CC07B2ABB9ADF0038D6CA /* CookingState.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				139CC07C2ABB9AE00038D6CA /* CookingState.swift in Sources */,
 				13E3D45C2AB8BCB1004B13C7 /* BoilEasy.xcdatamodeld in Sources */,
 				13E3D4522AB8BCB1004B13C7 /* AppDelegate.swift in Sources */,
 				13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */,
