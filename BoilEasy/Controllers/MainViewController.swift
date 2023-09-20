@@ -15,8 +15,8 @@ final class MainViewController: UIViewController {
         "Medium": UIImage(named: "medium.png")!,
         "Hard": UIImage(named: "hard.png")!
     ]
-    private var currentIndex = 1
     
+    private var currentIndex = 1 // текущий label
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
@@ -36,30 +36,20 @@ final class MainViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "medium.png"))
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-    }
-    // MARK: - UI Setup
-    private func setupUI() {
-        setupDifficultyLabels()
-        setupGestures()
         addTarget()
+        setupGestures()
+        setupDifficultyLabels()
+        updateImageViewForCurrentDifficulty()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
-        // Установка изображения для imageView в зависимости от текущего уровня сложности
-        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
-            imageView.image = image
-        }
-
     }
     //MARK: - Methods
     private func backgroundImage() {
@@ -85,6 +75,12 @@ final class MainViewController: UIViewController {
             let label = createDifficultyLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
             label.textColor = index == currentIndex ? .white : .gray
+        }
+    }
+    // update image view
+    private func updateImageViewForCurrentDifficulty() {
+        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
+            imageView.image = image
         }
     }
     //MARK: - Constraints
@@ -180,8 +176,6 @@ final class MainViewController: UIViewController {
         UIView.animate(withDuration: 0.7) {
             for (index, label) in self.view.subviews.enumerated() {
                 if let label = label as? UILabel {
-                    // Устанавливаем начальное значение альфа-канала меньше 1.0
-//                    label.alpha = 0.2 // Измените значение, если нужно
                     // Обновляем цвет текста
                     if label == self.timerLabel {
                         label.textColor = .white
@@ -190,29 +184,19 @@ final class MainViewController: UIViewController {
                     }
                 }
             }
-            
-            // Выполняем анимацию изменения альфа-канала к 1.0
-//            UIView.animate(withDuration: 0.5) {
-//                for label in self.view.subviews where label is UILabel {
-//                    label.alpha = 1.0
-//                }
-//            }
         }
     }
 
     private func animateImage() {
         // Устанавливаем начальный альфа-канал равным 0
          imageView.alpha = 0.0
-         
          // Анимация изменения альфа-канала для imageView
          UIView.animate(withDuration: 0.5, animations: {
              // Устанавливаем конечный альфа-канал равным 1 внутри блока анимации
              self.imageView.alpha = 1.0
          }) { _ in
              // По завершении анимации, обновляем изображение
-             if let imageName = self.difficultyOptions[safe: self.currentIndex], let image = self.imagesForDifficulties[imageName] {
-                 self.imageView.image = image
-             }
+             self.updateImageViewForCurrentDifficulty()
          }
     }
     //MARK: - Timer
@@ -268,11 +252,10 @@ final class MainViewController: UIViewController {
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
         
-        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
-             imageView.image = image
-         }
+        updateImageViewForCurrentDifficulty()
     }
 } // end
+
 extension Array {
     subscript(safe index: Int) -> Element? {
         return indices.contains(index) ? self[index] : nil
