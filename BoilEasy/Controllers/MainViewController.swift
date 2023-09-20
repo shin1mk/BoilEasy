@@ -22,6 +22,15 @@ final class MainViewController: UIViewController {
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     private let timerDurations = [360, 480, 660] // Время в секундах: Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "How are we going to boil an egg?"
+        label.font = UIFont.SFUITextBold(ofSize: 28)
+        label.textAlignment = .center
+        label.textColor = .white
+        label.numberOfLines = 0
+        return label
+    }()
     private let timerLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -50,6 +59,7 @@ final class MainViewController: UIViewController {
         updateImageViewForCurrentDifficulty()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
+        constraints()
     }
     //MARK: - Methods
     private func backgroundImage() {
@@ -83,16 +93,15 @@ final class MainViewController: UIViewController {
             imageView.image = image
         }
     }
-    //MARK: - Constraints
-    private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
-        // difficultyOptions
-        view.addSubview(difficultyOptions)
-        difficultyOptions.layer.zPosition = 1
-        difficultyOptions.snp.makeConstraints { make in
-            make.width.equalTo(view)
-            make.height.equalTo(50)
-            make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
-            make.top.equalTo(view).offset(100)
+    // constraints
+    private func constraints() {
+        // title label
+        view.addSubview(titleLabel)
+        titleLabel.layer.zPosition = 1
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view).offset(70)
+            make.centerX.equalTo(view)
+            make.width.equalTo(300)
         }
         // Размещаем imageView над timerLabel
         view.addSubview(imageView)
@@ -118,6 +127,20 @@ final class MainViewController: UIViewController {
             make.centerX.equalToSuperview()
             make.top.equalTo(timerLabel.snp.bottom).offset(20)
         }
+    }
+    //MARK: - Constraints
+    private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
+  
+        // difficultyOptions
+        view.addSubview(difficultyOptions)
+        difficultyOptions.layer.zPosition = 1
+        difficultyOptions.snp.makeConstraints { make in
+            make.width.equalTo(view)
+            make.height.equalTo(50)
+            make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
+            make.top.equalTo(view).offset(150)
+        }
+  
     }
     //MARK: - Target
     private func addTarget() {
@@ -176,6 +199,9 @@ final class MainViewController: UIViewController {
         UIView.animate(withDuration: 0.7) {
             for (index, label) in self.view.subviews.enumerated() {
                 if let label = label as? UILabel {
+                    if label == self.titleLabel {
+                        continue
+                    }
                     // Обновляем цвет текста
                     if label == self.timerLabel {
                         label.textColor = .white
