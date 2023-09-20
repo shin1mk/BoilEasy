@@ -22,6 +22,7 @@
 		13E3D4762AB8BCB2004B13C7 /* BoilEasyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */; };
 		13E3D4782AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */; };
 		13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4882AB8BD55004B13C7 /* MainViewController.swift */; };
+		13EBBC7D2ABAC3C90019116A /* TimerCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EBBC7C2ABAC3C90019116A /* TimerCircleView.swift */; };
 		9070E2D6F49E79212612227A /* Pods_BoilEasy_BoilEasyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */; };
 		C917621AE2BB8E5F4004D33F /* Pods_BoilEasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D29232183EB2A7B64D7A56A1 /* Pods_BoilEasy.framework */; };
 		EE76B0BDD43782C3ACF4BFA6 /* Pods_BoilEasyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2023A9EC49536EB24DE2A4F /* Pods_BoilEasyTests.framework */; };
@@ -65,6 +66,7 @@
 		13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITests.swift; sourceTree = "<group>"; };
 		13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		13E3D4882AB8BD55004B13C7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		13EBBC7C2ABAC3C90019116A /* TimerCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCircleView.swift; sourceTree = "<group>"; };
 		188A5E56635D58B6F1B0A9DC /* Pods-BoilEasy-BoilEasyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.release.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.release.xcconfig"; sourceTree = "<group>"; };
 		5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			children = (
 				13E3D4882AB8BD55004B13C7 /* MainViewController.swift */,
 				1355641C2AB8CB7300B90AB3 /* text.swift */,
+				13EBBC7C2ABAC3C90019116A /* TimerCircleView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				139057132ABA5D7C00EF40FE /* CustomFonts.swift in Sources */,
 				1355641D2AB8CB7300B90AB3 /* text.swift in Sources */,
 				13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */,
+				13EBBC7D2ABAC3C90019116A /* TimerCircleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

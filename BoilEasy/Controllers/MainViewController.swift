@@ -59,6 +59,7 @@ final class MainViewController: UIViewController {
         if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
             imageView.image = image
         }
+
     }
     //MARK: - Methods
     private func backgroundImage() {
@@ -150,7 +151,7 @@ final class MainViewController: UIViewController {
         default:
             break
         }
-        
+        animateImage()
         animateLabels()
         updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
     }
@@ -163,6 +164,7 @@ final class MainViewController: UIViewController {
                 continue
             }
             currentIndex = label.tag
+            animateImage()
             animateLabels()
             updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
 
@@ -174,12 +176,34 @@ final class MainViewController: UIViewController {
         }
     }
     //MARK: - Animate
+//    private func animateLabels() {
+//        UIView.animate(withDuration: 0.7) {
+//            for (index, label) in self.view.subviews.enumerated() {
+//                if let label = label as? UILabel {
+//                    // Устанавливаем начальное значение альфа-канала
+////                    label.alpha = 0.0
+//                    // Обновляем цвет текста
+//                    if label == self.timerLabel {
+//                        label.textColor = .white
+//                    } else {
+//                        label.textColor = index == self.currentIndex ? .white : .systemGray
+//                    }
+//                }
+//            }
+////            // Выполняем анимацию появления (установка альфа-канала на 1.0)
+////            UIView.animate(withDuration: 0.7) {
+////                for label in self.view.subviews where label is UILabel {
+////                    label.alpha = 1.0
+////                }
+////            }
+//        }
+//    }
     private func animateLabels() {
         UIView.animate(withDuration: 0.7) {
             for (index, label) in self.view.subviews.enumerated() {
                 if let label = label as? UILabel {
-                    // Устанавливаем начальное значение альфа-канала
-                    label.alpha = 0.0
+                    // Устанавливаем начальное значение альфа-канала меньше 1.0
+                    label.alpha = 0.2 // Измените значение, если нужно
                     // Обновляем цвет текста
                     if label == self.timerLabel {
                         label.textColor = .white
@@ -188,13 +212,30 @@ final class MainViewController: UIViewController {
                     }
                 }
             }
-            // Выполняем анимацию появления (установка альфа-канала на 1.0)
-            UIView.animate(withDuration: 0.7) {
+            
+            // Выполняем анимацию изменения альфа-канала к 1.0
+            UIView.animate(withDuration: 0.5) {
                 for label in self.view.subviews where label is UILabel {
                     label.alpha = 1.0
                 }
             }
         }
+    }
+
+    private func animateImage() {
+        // Устанавливаем начальный альфа-канал равным 0
+         imageView.alpha = 0.0
+         
+         // Анимация изменения альфа-канала для imageView
+         UIView.animate(withDuration: 0.5, animations: {
+             // Устанавливаем конечный альфа-канал равным 1 внутри блока анимации
+             self.imageView.alpha = 1.0
+         }) { _ in
+             // По завершении анимации, обновляем изображение
+             if let imageName = self.difficultyOptions[safe: self.currentIndex], let image = self.imagesForDifficulties[imageName] {
+                 self.imageView.image = image
+             }
+         }
     }
     //MARK: - Timer
     @objc private func startButtonTapped() {
