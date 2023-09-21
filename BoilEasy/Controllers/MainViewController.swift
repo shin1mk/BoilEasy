@@ -19,7 +19,7 @@ final class MainViewController: UIViewController {
     // circle
     private var shapeLayer: CAShapeLayer!
     private var currentProgress: Float = 1.0 // Начнем с полной окружности
-
+    
     private var currentIndex = 1 // текущий label
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
@@ -65,43 +65,52 @@ final class MainViewController: UIViewController {
         backgroundImage()
         setupCircleLayer()
     }
+    
+    private func animationCircle() {
+        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        strokeAnimation.fromValue = 0 // Начальное значение
+        strokeAnimation.toValue = 1 // Конечное значение (заполненный круг)
+        strokeAnimation.duration = 1 // Продолжительность анимации (в секундах)
+        shapeLayer.add(strokeAnimation, forKey: "strokeAnimation")
+        // Анимация изменения цвета фона
+        let colorAnimation = CABasicAnimation(keyPath: "strokeColor")
+        colorAnimation.fromValue = UIColor.gray.cgColor // Начальный цвет
+        colorAnimation.duration = 1 // Продолжительность анимации (в секундах)
+        shapeLayer.add(colorAnimation, forKey: "colorAnimation")
+        shapeLayer.strokeColor = UIColor.white.cgColor
+    }
+    
     private func setupCircleLayer() {
-        // Создаем CAShapeLayer, который будет использоваться для отображения круга
         shapeLayer = CAShapeLayer()
         
-        // Создаем UIBezierPath для определения формы круга
-        let circularPath = UIBezierPath(
-            // Центр круга
+        let backgroundLayer = CAShapeLayer()
+        backgroundLayer.path = UIBezierPath(
             arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
-            // Радиус круга (минимальное значение из ширины и высоты представления минус 5 пикселей для отступа)
-            radius: min(view.bounds.width, view.bounds.height) / 2 - 40,
-            // Угол старта (в данном случае, начинаем с верхней точки, то есть -π/2 радиан)
+            radius: min(view.bounds.width, view.bounds.height) / 2 - 40, // Небольшой отступ
             startAngle: -.pi / 2,
-            // Угол завершения (завершаем в той же точке, где начали, то есть 2π - π/2 радиан)
             endAngle: 2 * .pi - .pi / 2,
-            // Направление обхода (по часовой стрелке)
+            clockwise: true
+        ).cgPath
+        backgroundLayer.strokeColor = UIColor.gray.cgColor
+        backgroundLayer.fillColor = UIColor.clear.cgColor
+        backgroundLayer.lineWidth = 10
+        backgroundLayer.lineCap = .round
+        backgroundLayer.strokeEnd = 1
+        view.layer.addSublayer(backgroundLayer)
+        
+        let circularPath = UIBezierPath(
+            arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
+            radius: min(view.bounds.width, view.bounds.height) / 2 - 40,
+            startAngle: -.pi / 2,
+            endAngle: 2 * .pi - .pi / 2,
             clockwise: true
         )
-        
-        // Устанавливаем путь круга для CAShapeLayer
         shapeLayer.path = circularPath.cgPath
-        
-        // Заливаем круг прозрачным цветом (fillColor)
         shapeLayer.fillColor = UIColor.clear.cgColor
-
-        // Устанавливаем цвет обводки круга (strokeColor)
         shapeLayer.strokeColor = UIColor.white.cgColor
-        
-        // Устанавливаем толщину линии обводки
         shapeLayer.lineWidth = 10
-        
-        // Устанавливаем стиль концов линии (круглые концы)
         shapeLayer.lineCap = .round
-        
-        // Устанавливаем прогресс обводки на 1 (полный круг)
         shapeLayer.strokeEnd = 1
-
-        // Добавляем shapeLayer в иерархию представлений (как подслои для вашего контейнера/вида)
         view.layer.addSublayer(shapeLayer)
     }
     //MARK: - Methods
@@ -278,6 +287,7 @@ extension MainViewController {
             stopTimer()
         } else {
             startTimer()
+            
         }
         // Включение/отключение жестов в зависимости от состояния таймера
         let gesturesEnabled = !isTimerRunning
@@ -287,11 +297,14 @@ extension MainViewController {
     }
     // start Timer
     private func startTimer() {
+        animationCircle()
+        
         isTimerRunning = true
         startButton.setTitle("Cancel", for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         updateTimerLabel()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        
     }
     // stop Timer
     private func stopTimer() {
@@ -330,7 +343,7 @@ extension MainViewController {
     private func setProgress(_ progress: Float) {
         shapeLayer.strokeEnd = CGFloat(progress)
     }
-
+    
     // Обновить timerLabel для текущей сложности
     private func updateTimerLabelForCurrentDifficulty() {
         let minutes = timerDurations[currentIndex] / 60
