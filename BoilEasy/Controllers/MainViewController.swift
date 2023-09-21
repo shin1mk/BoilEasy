@@ -172,52 +172,7 @@ final class MainViewController: UIViewController {
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
-    //MARK: - Target
-    private func addTarget() {
-        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-    }
-    //MARK: - Gestures
-    private func setupGestures() {
-        // Тап
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        view.addGestureRecognizer(tapGesture)
-        // Жесты для свайпа влево
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
-        swipeLeft.direction = .left
-        view.addGestureRecognizer(swipeLeft)
-        // Жесты для свайпа вправо
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
-    }
-    //MARK: - handleSwipe
-    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
-        switch gesture.direction {
-        case .left:
-            currentIndex = (currentIndex - 1 + difficultyLabels.count) % difficultyLabels.count
-        case .right:
-            currentIndex = (currentIndex + 1) % difficultyLabels.count
-        default:
-            break
-        }
-        animateImage()
-        animateLabels()
-        updateTimerLabelForCurrentDifficulty()
-    }
-    //MARK: - handleTap
-    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-        let tapLocation = gesture.location(in: view)
-        
-        for (_, subview) in view.subviews.enumerated() {
-            guard let label = subview as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex else {
-                continue
-            }
-            currentIndex = label.tag
-            animateImage()
-            animateLabels()
-            updateTimerLabelForCurrentDifficulty()
-        }
-    }
+
 } // end
 //MARK: - Array
 extension Array {
@@ -235,12 +190,6 @@ extension MainViewController {
             startTimer()
         }
         enableGestures(!isTimerRunning)
-    }
-    // enableGestures
-    private func enableGestures(_ enabled: Bool) {
-        view.gestureRecognizers?.forEach { gesture in
-            gesture.isEnabled = enabled
-        }
     }
     // start Timer
     private func startTimer() {
@@ -336,5 +285,60 @@ extension MainViewController {
         colorAnimation.duration = 0.5 // Продолжительность анимации
         shapeLayer.add(colorAnimation, forKey: "colorAnimation")
         shapeLayer.strokeColor = UIColor.white.cgColor
+    }
+}
+//MARK: - Gestures
+extension MainViewController {
+    //MARK: - Target
+    private func addTarget() {
+        startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+    }
+    // enableGestures
+    private func enableGestures(_ enabled: Bool) {
+        view.gestureRecognizers?.forEach { gesture in
+            gesture.isEnabled = enabled
+        }
+    }
+    //MARK: - Gestures
+    private func setupGestures() {
+        // Тап
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        view.addGestureRecognizer(tapGesture)
+        // Жесты для свайпа влево
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        // Жесты для свайпа вправо
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+    }
+    //MARK: - handleSwipe
+    @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+        switch gesture.direction {
+        case .left:
+            currentIndex = (currentIndex - 1 + difficultyLabels.count) % difficultyLabels.count
+        case .right:
+            currentIndex = (currentIndex + 1) % difficultyLabels.count
+        default:
+            break
+        }
+        animateImage()
+        animateLabels()
+        updateTimerLabelForCurrentDifficulty()
+    }
+    //MARK: - handleTap
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        let tapLocation = gesture.location(in: view)
+        
+        for (_, subview) in view.subviews.enumerated() {
+            guard let label = subview as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex else {
+                continue
+            }
+            currentIndex = label.tag
+            animateImage()
+            animateLabels()
+            updateTimerLabelForCurrentDifficulty()
+        }
     }
 }
