@@ -9,27 +9,24 @@ import UIKit
 import SnapKit
 
 final class MainViewController: UIViewController {
-    //MARK: Properties
-    private let difficultyOptions = ["Soft", "Medium", "Hard"]
+    private let difficultyLabels = ["Soft", "Medium", "Hard"]
     private let imagesForDifficulties: [String: UIImage] = [
         "Soft": UIImage(named: "soft.png")!,
         "Medium": UIImage(named: "medium.png")!,
         "Hard": UIImage(named: "hard.png")!
     ]
-    // circle
     private var shapeLayer: CAShapeLayer!
-    private var currentProgress: Float = 1.0 // Начнем с полной окружности
-    
+    private var currentProgress: Float = 1.0 // Начнем с полной окружности круга
     private var currentIndex = 1 // текущий label
     private var timer: Timer?
-    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время в 8 минут (8 * 60 секунд)
+    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
-    private let timerDurations = [360, 480, 660] // Время в секундах: Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "How to boil eggs easy?"
-        label.font = UIFont.SFUITextHeavy(ofSize: 32)
+        label.font = UIFont.SFUITextHeavy(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
         label.numberOfLines = 0
@@ -44,7 +41,7 @@ final class MainViewController: UIViewController {
     }()
     private let startButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Start", for: .normal)
+        button.setTitle("START", for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         button.setTitleColor(.white, for: .normal)
         return button
@@ -60,29 +57,15 @@ final class MainViewController: UIViewController {
         addTarget()
         setupGestures()
         setupDifficultyLabels()
-        updateImageViewForCurrentDifficulty()
+        updateImageView()
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
         setupCircleLayer()
     }
-    
-    private func animationCircle() {
-        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        strokeAnimation.fromValue = 0 // Начальное значение
-        strokeAnimation.toValue = 1 // Конечное значение (заполненный круг)
-        strokeAnimation.duration = 1 // Продолжительность анимации (в секундах)
-        shapeLayer.add(strokeAnimation, forKey: "strokeAnimation")
-        // Анимация изменения цвета фона
-        let colorAnimation = CABasicAnimation(keyPath: "strokeColor")
-        colorAnimation.fromValue = UIColor.gray.cgColor // Начальный цвет
-        colorAnimation.duration = 1 // Продолжительность анимации (в секундах)
-        shapeLayer.add(colorAnimation, forKey: "colorAnimation")
-        shapeLayer.strokeColor = UIColor.white.cgColor
-    }
-    
+    // setup circle Layer
     private func setupCircleLayer() {
         shapeLayer = CAShapeLayer()
-        
+        // фон
         let backgroundLayer = CAShapeLayer()
         backgroundLayer.path = UIBezierPath(
             arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
@@ -91,13 +74,13 @@ final class MainViewController: UIViewController {
             endAngle: 2 * .pi - .pi / 2,
             clockwise: true
         ).cgPath
-        backgroundLayer.strokeColor = UIColor.gray.cgColor
+        backgroundLayer.strokeColor = UIColor.systemGray.cgColor
         backgroundLayer.fillColor = UIColor.clear.cgColor
-        backgroundLayer.lineWidth = 10
+        backgroundLayer.lineWidth = 8
         backgroundLayer.lineCap = .round
         backgroundLayer.strokeEnd = 1
         view.layer.addSublayer(backgroundLayer)
-        
+        // белая линия наполнения
         let circularPath = UIBezierPath(
             arcCenter: CGPoint(x: view.bounds.width / 2, y: view.bounds.height / 2),
             radius: min(view.bounds.width, view.bounds.height) / 2 - 40,
@@ -108,7 +91,7 @@ final class MainViewController: UIViewController {
         shapeLayer.path = circularPath.cgPath
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeColor = UIColor.white.cgColor
-        shapeLayer.lineWidth = 10
+        shapeLayer.lineWidth = 8
         shapeLayer.lineCap = .round
         shapeLayer.strokeEnd = 1
         view.layer.addSublayer(shapeLayer)
@@ -131,40 +114,40 @@ final class MainViewController: UIViewController {
         label.tag = tag
         return label
     }
-    // create Labels
+    // create labels
     private func setupDifficultyLabels() {
-        for (index, labelText) in difficultyOptions.enumerated() {
+        for (index, labelText) in difficultyLabels.enumerated() {
             let label = createDifficultyLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
-            label.textColor = index == currentIndex ? .white : .gray
+            label.textColor = index == currentIndex ? .white : .systemGray
         }
     }
     // update image view
-    private func updateImageViewForCurrentDifficulty() {
-        if let imageName = difficultyOptions[safe: currentIndex], let image = imagesForDifficulties[imageName] {
+    private func updateImageView() {
+        if let imageName = difficultyLabels[safe: currentIndex], let image = imagesForDifficulties[imageName] {
             imageView.image = image
         }
     }
     //MARK: - Constraints
-    private func setupConstraints(_ difficultyOptions: UILabel, index: Int) {
-        // difficultyOptions
-        view.addSubview(difficultyOptions)
-        difficultyOptions.layer.zPosition = 1
-        difficultyOptions.snp.makeConstraints { make in
+    private func setupConstraints(_ difficultyLabels: UILabel, index: Int) {
+        // difficulty labels
+        view.addSubview(difficultyLabels)
+        difficultyLabels.layer.zPosition = 1
+        difficultyLabels.snp.makeConstraints { make in
+            make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
+            make.top.equalTo(view).offset(180)
             make.width.equalTo(view)
             make.height.equalTo(50)
-            make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
-            make.top.equalTo(view).offset(150)
         }
         // title label
         view.addSubview(titleLabel)
         titleLabel.layer.zPosition = 1
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view).offset(70)
+            make.top.equalTo(view).offset(75)
             make.centerX.equalTo(view)
             make.width.equalTo(300)
         }
-        // imageView
+        // image view
         view.addSubview(imageView)
         imageView.layer.zPosition = 1
         imageView.snp.makeConstraints { make in
@@ -173,20 +156,20 @@ final class MainViewController: UIViewController {
             make.width.equalTo(512)
             make.height.equalTo(512)
         }
-        // timerLabel
+        // timer label
         view.addSubview(timerLabel)
         timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-150) // Отрицательное значение для закрепления от низа
+            make.bottom.equalToSuperview().offset(-150) // значение для закрепления от низа
             make.width.equalTo(150)
         }
-        // startButton
+        // start button
         view.addSubview(startButton)
         startButton.layer.zPosition = 1
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timerLabel.snp.bottom).offset(20)
+            make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
     //MARK: - Target
@@ -211,15 +194,15 @@ final class MainViewController: UIViewController {
     @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
         case .left:
-            currentIndex = (currentIndex + 1) % difficultyOptions.count
+            currentIndex = (currentIndex - 1 + difficultyLabels.count) % difficultyLabels.count
         case .right:
-            currentIndex = (currentIndex - 1 + difficultyOptions.count) % difficultyOptions.count
+            currentIndex = (currentIndex + 1) % difficultyLabels.count
         default:
             break
         }
         animateImage()
         animateLabels()
-        updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
+        updateTimerLabelForCurrentDifficulty()
     }
     //MARK: - handleTap
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -232,15 +215,87 @@ final class MainViewController: UIViewController {
             currentIndex = label.tag
             animateImage()
             animateLabels()
-            updateTimerLabelForCurrentDifficulty() // Обновляем timerLabel
-            
-            if isTimerRunning {
-                stopTimer()
-                startTimer()
-            }
-            break
+            updateTimerLabelForCurrentDifficulty()
         }
     }
+} // end
+//MARK: - Array
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+//MARK: - Timer
+extension MainViewController {
+    //MARK: - Timer
+    @objc private func startButtonTapped() {
+        if isTimerRunning {
+            stopTimer()
+        } else {
+            startTimer()
+        }
+        enableGestures(!isTimerRunning)
+    }
+    // enableGestures
+    private func enableGestures(_ enabled: Bool) {
+        view.gestureRecognizers?.forEach { gesture in
+            gesture.isEnabled = enabled
+        }
+    }
+    // start Timer
+    private func startTimer() {
+        isTimerRunning = true
+        startButton.setTitle("CANCEL", for: .normal)
+        secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        
+        updateTimerLabel()
+        animateCircle()
+    }
+    // stop Timer
+    private func stopTimer() {
+        isTimerRunning = false
+        startButton.setTitle("START", for: .normal)
+        timer?.invalidate()
+        // Сбросить значение таймера на начальное
+        secondsRemaining = timerDurations[currentIndex]
+        updateTimerLabel()
+    }
+    // update Timer
+    @objc private func updateTimer() {
+        if secondsRemaining > 0 {
+            secondsRemaining -= 1
+            updateTimerLabel()
+        } else {
+            stopTimer()
+        }
+    }
+    // updateTimerLabel
+    private func updateTimerLabel() {
+        let minutes = secondsRemaining / 60
+        let seconds = secondsRemaining % 60
+        let timeString = String(format: "%02d:%02d", minutes, seconds)
+        timerLabel.text = timeString
+        let totalDuration = Float(timerDurations[currentIndex])
+        let remainingTime = Float(secondsRemaining)
+        currentProgress = 1.0 - (remainingTime / totalDuration)
+        setProgress(1.0 - currentProgress)
+    }
+    // updateTimerLabelForCurrentDifficulty
+    private func updateTimerLabelForCurrentDifficulty() {
+        let minutes = timerDurations[currentIndex] / 60
+        let seconds = timerDurations[currentIndex] % 60
+        let timeString = String(format: "%02d:%02d", minutes, seconds)
+        timerLabel.text = timeString
+        updateImageView()
+    }
+    // Устанавливает прогресс анимации окружности
+    private func setProgress(_ progress: Float) {
+        shapeLayer.strokeEnd = CGFloat(progress)
+    }
+}
+//MARK: - Animation
+extension MainViewController {
     //MARK: - Animate
     private func animateLabels() {
         UIView.animate(withDuration: 0.7) {
@@ -259,98 +314,27 @@ final class MainViewController: UIViewController {
             }
         }
     }
-    
+    // animateImage
     private func animateImage() {
-        // Устанавливаем начальный альфа-канал равным 0
         imageView.alpha = 0.0
-        // Анимация изменения альфа-канала для imageView
         UIView.animate(withDuration: 0.5, animations: {
-            // Устанавливаем конечный альфа-канал равным 1 внутри блока анимации
             self.imageView.alpha = 1.0
         }) { _ in
-            // По завершении анимации, обновляем изображение
-            self.updateImageViewForCurrentDifficulty()
+            self.updateImageView()
         }
     }
-} // end
-
-extension Array {
-    subscript(safe index: Int) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
-
-extension MainViewController {
-    //MARK: - Timer
-    @objc private func startButtonTapped() {
-        if isTimerRunning {
-            stopTimer()
-        } else {
-            startTimer()
-            
-        }
-        // Включение/отключение жестов в зависимости от состояния таймера
-        let gesturesEnabled = !isTimerRunning
-        view.gestureRecognizers?.forEach { gesture in
-            gesture.isEnabled = gesturesEnabled
-        }
-    }
-    // start Timer
-    private func startTimer() {
-        animationCircle()
-        
-        isTimerRunning = true
-        startButton.setTitle("Cancel", for: .normal)
-        secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
-        updateTimerLabel()
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-        
-    }
-    // stop Timer
-    private func stopTimer() {
-        isTimerRunning = false
-        startButton.setTitle("Start", for: .normal)
-        timer?.invalidate()
-        // Сбросить значение таймера на начальное
-        secondsRemaining = timerDurations[currentIndex]
-        updateTimerLabel()
-    }
-    // update Timer
-    @objc private func updateTimer() {
-        if secondsRemaining > 0 {
-            secondsRemaining -= 1
-            updateTimerLabel()
-        } else {
-            stopTimer() // Останавливаем таймер, когда время истекло
-        }
-    }
-    // update Timer Label
-    private func updateTimerLabel() {
-        let minutes = secondsRemaining / 60
-        let seconds = secondsRemaining % 60
-        let timeString = String(format: "%02d:%02d", minutes, seconds)
-        timerLabel.text = timeString
-        
-        // Обновление прогресса на основе оставшегося времени
-        let totalDuration = Float(timerDurations[currentIndex])
-        let remainingTime = Float(secondsRemaining)
-        currentProgress = 1.0 - (remainingTime / totalDuration)
-        
-        // Устанавливаем новое значение прогресса
-        setProgress(1.0 - currentProgress)
-    }
-    // Устанавливает прогресс анимации окружности
-    private func setProgress(_ progress: Float) {
-        shapeLayer.strokeEnd = CGFloat(progress)
-    }
-    
-    // Обновить timerLabel для текущей сложности
-    private func updateTimerLabelForCurrentDifficulty() {
-        let minutes = timerDurations[currentIndex] / 60
-        let seconds = timerDurations[currentIndex] % 60
-        let timeString = String(format: "%02d:%02d", minutes, seconds)
-        timerLabel.text = timeString
-        
-        updateImageViewForCurrentDifficulty()
+    // animatenCircle
+    private func animateCircle() {
+        let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        strokeAnimation.fromValue = 0 // Начальное значение
+        strokeAnimation.toValue = 1 // Конечное значение (заполненный круг)
+        strokeAnimation.duration = 0.8 // Продолжительность анимации
+        shapeLayer.add(strokeAnimation, forKey: "strokeAnimation")
+        // change color
+        let colorAnimation = CABasicAnimation(keyPath: "strokeColor")
+        colorAnimation.fromValue = UIColor.gray.cgColor // Начальный цвет
+        colorAnimation.duration = 0.5 // Продолжительность анимации
+        shapeLayer.add(colorAnimation, forKey: "colorAnimation")
+        shapeLayer.strokeColor = UIColor.white.cgColor
     }
 }
