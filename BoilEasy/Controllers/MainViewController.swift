@@ -22,7 +22,8 @@ final class MainViewController: UIViewController {
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
-    
+    private var startDate: Date?
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "How to boil eggs easy?"
@@ -61,6 +62,18 @@ final class MainViewController: UIViewController {
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
         setupCircleLayer()
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+
+    }
+    // Обработчик события UIApplication.didBecomeActiveNotification
+    @objc private func appDidBecomeActive() {
+        if isTimerRunning {
+            updateTimerLabel() // Обновляем время, если таймер был запущен
+        }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     // setup circle Layer
     private func setupCircleLayer() {
@@ -98,7 +111,7 @@ final class MainViewController: UIViewController {
     }
     //MARK: - Methods
     private func backgroundImage() {
-        let backgroundImage = UIImage(named: "background.png")
+        let backgroundImage = UIImage(named: "background2.png")
         let backgroundImageView = UIImageView(image: backgroundImage)
         backgroundImageView.contentMode = .scaleAspectFill // Вы можете выбрать нужный режим масштабирования
         backgroundImageView.frame = view.bounds // Установите размеры фоновой картинки равными размерам вашего представления
@@ -128,7 +141,7 @@ final class MainViewController: UIViewController {
             imageView.image = image
         }
     }
-    //MARK: - Constraints
+    // Constraints
     private func setupConstraints(_ difficultyLabels: UILabel, index: Int) {
         // difficulty labels
         view.addSubview(difficultyLabels)
@@ -172,7 +185,6 @@ final class MainViewController: UIViewController {
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
-
 } // end
 //MARK: - Array
 extension Array {
@@ -198,6 +210,7 @@ extension MainViewController {
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         
+        startDate = Date() // Запоминаем текущую дату при старте таймера
         updateTimerLabel()
         animateCircle()
     }
@@ -220,7 +233,23 @@ extension MainViewController {
         }
     }
     // updateTimerLabel
+//    private func updateTimerLabel() {
+//        let minutes = secondsRemaining / 60
+//        let seconds = secondsRemaining % 60
+//        let timeString = String(format: "%02d:%02d", minutes, seconds)
+//        timerLabel.text = timeString
+//        let totalDuration = Float(timerDurations[currentIndex])
+//        let remainingTime = Float(secondsRemaining)
+//        currentProgress = 1.0 - (remainingTime / totalDuration)
+//        setProgress(1.0 - currentProgress)
+//    }
     private func updateTimerLabel() {
+        if let startDate = startDate {
+            let currentTime = Date()
+            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
+            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
+        }
+        
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
@@ -230,6 +259,7 @@ extension MainViewController {
         currentProgress = 1.0 - (remainingTime / totalDuration)
         setProgress(1.0 - currentProgress)
     }
+
     // updateTimerLabelForCurrentDifficulty
     private func updateTimerLabelForCurrentDifficulty() {
         let minutes = timerDurations[currentIndex] / 60
