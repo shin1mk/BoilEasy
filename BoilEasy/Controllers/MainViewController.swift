@@ -11,8 +11,9 @@
 
 import UIKit
 import SnapKit
+import UserNotifications
 
-final class MainViewController: UIViewController {
+final class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let difficultyLabels = ["Soft", "Medium", "Hard"]
     private let imagesForDifficulties: [String: UIImage] = [
         "Soft": UIImage(named: "soft.png")!,
@@ -26,7 +27,8 @@ final class MainViewController: UIViewController {
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
-    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+//    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+    private let timerDurations = [5, 3, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -192,6 +194,7 @@ final class MainViewController: UIViewController {
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
+
 } // end
 //MARK: - Array
 extension Array {
@@ -237,6 +240,7 @@ extension MainViewController {
             updateTimerLabel()
         } else {
             stopTimer()
+            showAlert()
         }
     }
     // updateTimerLabel
@@ -264,7 +268,15 @@ extension MainViewController {
         timerLabel.text = timeString
         updateImageView()
     }
-
+    
+    private func showAlert() {
+        let alertController = UIAlertController(title: "Таймер завершен", message: "Пора!", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+        }
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
 }
 //MARK: - Animation
 extension MainViewController {
