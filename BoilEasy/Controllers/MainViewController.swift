@@ -5,6 +5,10 @@
 //
 //  Created by SHIN MIKHAIL on 18.09.2023.
 //
+// добавить уведомления в центр
+// добавить уведомление внутри приложения алерт
+// сделать другую кнопку
+
 import UIKit
 import SnapKit
 
@@ -18,11 +22,11 @@ final class MainViewController: UIViewController {
     private var shapeLayer: CAShapeLayer!
     private var currentProgress: Float = 1.0 // Начнем с полной окружности круга
     private var currentIndex = 1 // текущий label
+    private var startDate: Date?
     private var timer: Timer?
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
-    private var startDate: Date?
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -62,8 +66,11 @@ final class MainViewController: UIViewController {
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
         setupCircleLayer()
+        notificationObserver()
+    }
+    //MARK: Notification Center
+    private func notificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-
     }
     // Обработчик события UIApplication.didBecomeActiveNotification
     @objc private func appDidBecomeActive() {
@@ -71,7 +78,7 @@ final class MainViewController: UIViewController {
             updateTimerLabel() // Обновляем время, если таймер был запущен
         }
     }
-
+    // удаляем наблюдатель
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -233,16 +240,6 @@ extension MainViewController {
         }
     }
     // updateTimerLabel
-//    private func updateTimerLabel() {
-//        let minutes = secondsRemaining / 60
-//        let seconds = secondsRemaining % 60
-//        let timeString = String(format: "%02d:%02d", minutes, seconds)
-//        timerLabel.text = timeString
-//        let totalDuration = Float(timerDurations[currentIndex])
-//        let remainingTime = Float(secondsRemaining)
-//        currentProgress = 1.0 - (remainingTime / totalDuration)
-//        setProgress(1.0 - currentProgress)
-//    }
     private func updateTimerLabel() {
         if let startDate = startDate {
             let currentTime = Date()
@@ -257,9 +254,8 @@ extension MainViewController {
         let totalDuration = Float(timerDurations[currentIndex])
         let remainingTime = Float(secondsRemaining)
         currentProgress = 1.0 - (remainingTime / totalDuration)
-        setProgress(1.0 - currentProgress)
+        animateProgress(1.0 - currentProgress)
     }
-
     // updateTimerLabelForCurrentDifficulty
     private func updateTimerLabelForCurrentDifficulty() {
         let minutes = timerDurations[currentIndex] / 60
@@ -268,10 +264,7 @@ extension MainViewController {
         timerLabel.text = timeString
         updateImageView()
     }
-    // Устанавливает прогресс анимации окружности
-    private func setProgress(_ progress: Float) {
-        shapeLayer.strokeEnd = CGFloat(progress)
-    }
+
 }
 //MARK: - Animation
 extension MainViewController {
@@ -315,6 +308,10 @@ extension MainViewController {
         colorAnimation.duration = 0.5 // Продолжительность анимации
         shapeLayer.add(colorAnimation, forKey: "colorAnimation")
         shapeLayer.strokeColor = UIColor.white.cgColor
+    }
+    // Устанавливает прогресс анимации окружности
+    private func animateProgress(_ progress: Float) {
+        shapeLayer.strokeEnd = CGFloat(progress)
     }
 }
 //MARK: - Gestures
