@@ -12,6 +12,7 @@
 import UIKit
 import SnapKit
 import UserNotifications
+import BackgroundTasks
 
 final class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let difficultyLabels = ["Soft", "Medium", "Hard"]
@@ -28,7 +29,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
 //    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
-    private let timerDurations = [5, 3, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+    private let timerDurations = [60, 3, 7] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     private let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     private let titleLabel: UILabel = {
@@ -69,31 +70,24 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
         setupCircleLayer()
-        notificationObserver()
+//        notificationObserver()
     }
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    //MARK: Notification Center
-    private func notificationObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-    }
-    // Обработчик события UIApplication.didBecomeActiveNotification
-    @objc private func appDidBecomeActive() {
-        if isTimerRunning {
-            updateTimerLabel() // Обновляем время, если таймер был запущен
-        }
-    }
-    // удаляем наблюдатель
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+// этот наблюдатель в фоне не работает, а просто запоминает момент остановки
+////    //MARK: Notification Center
+//    private func notificationObserver() {
+//        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+//    }
+//    // Обработчик события UIApplication.didBecomeActiveNotification
+//    @objc private func appDidBecomeActive() {
+////        if isTimerRunning {
+////            updateTimerLabel() // Обновляем время, если таймер был запущен
+////        }
+//        print("appDidBecomeActive")
+//    }
+//    // удаляем наблюдатель
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
     // setup circle Layer
     private func setupCircleLayer() {
         shapeLayer = CAShapeLayer()
@@ -204,8 +198,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
-    
-    
 } // end
 //MARK: - Array
 extension Array {
@@ -222,7 +214,7 @@ extension MainViewController {
         } else {
             startTimer()
         }
-        enableGestures(!isTimerRunning)
+        enableGestures(!isTimerRunning) // откл жесты
     }
     // start Timer
     private func startTimer() {
@@ -234,7 +226,22 @@ extension MainViewController {
         startDate = Date() // Запоминаем текущую дату при старте таймера
         updateTimerLabel()
         animateCircle()
+        
+        // Запуск фоновой задачи
+        scheduleBackgroundTask()
     }
+    private func scheduleBackgroundTask() {
+        let request = BGProcessingTaskRequest(identifier: "com.BoilEasy.timerTask")
+        request.requiresNetworkConnectivity = false // Можете настроить требования задачи
+        request.requiresExternalPower = false
+        
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Не удалось запланировать фоновую задачу: \(error)")
+        }
+    }
+
     // stop Timer
     private func stopTimer() {
         isTimerRunning = false
@@ -243,6 +250,7 @@ extension MainViewController {
         // Сбросить значение таймера на начальное
         secondsRemaining = timerDurations[currentIndex]
         updateTimerLabel()
+        enableGestures(!isTimerRunning)
     }
     // update Timer
     @objc private func updateTimer() {
@@ -251,18 +259,17 @@ extension MainViewController {
             updateTimerLabel()
         } else {
             stopTimer()
-            showAlert()
-            appDelegate.sendNotifications() // Вызовите функцию при старте таймера
+//            showAlert()
+            appDelegate.sendNotifications()
         }
     }
     // updateTimerLabel
     private func updateTimerLabel() {
-        if let startDate = startDate {
-            let currentTime = Date()
-            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
-            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
-        }
-        
+//        if let startDate = startDate {
+//            let currentTime = Date()
+//            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
+//            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
+//        }
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
@@ -280,13 +287,14 @@ extension MainViewController {
         timerLabel.text = timeString
         updateImageView()
     }
-    
+    // alert
     private func showAlert() {
         let alertController = UIAlertController(title: "Таймер завершен", message: "Пора!", preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
         }
         alertController.addAction(okAction)
+        
         present(alertController, animated: true, completion: nil)
     }
 }
@@ -380,16 +388,16 @@ extension MainViewController {
     }
     //MARK: - handleTap
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
-        let tapLocation = gesture.location(in: view)
-        
-        for (_, subview) in view.subviews.enumerated() {
-            guard let label = subview as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex else {
-                continue
-            }
-            currentIndex = label.tag
-            animateImage()
-            animateLabels()
-            updateTimerLabelForCurrentDifficulty()
-        }
+//        let tapLocation = gesture.location(in: view)
+//
+//        for (_, subview) in view.subviews.enumerated() {
+//            guard let label = subview as? UILabel, label.frame.contains(tapLocation), label.tag != currentIndex else {
+//                continue
+//            }
+//            currentIndex = label.tag
+//            animateImage()
+//            animateLabels()
+//            updateTimerLabelForCurrentDifficulty()
+//        }
     }
 }
