@@ -48,6 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.BoilEasy.timerTask", using: nil) { task in
             self.handleBackgroundTask(task: task as! BGProcessingTask)
         }
+
         // Запрос разрешения на уведомления
         notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             guard granted else { return }
@@ -58,20 +59,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         // Установка делегата для уведомлений
         notificationCenter.delegate = self
-        // Отправка уведомлений (если это необходимо)
-        sendNotifications()
         
         return true
     }
 
     func handleBackgroundTask(task: BGProcessingTask) {
         print("Starting background task...")
-        // Ваш код фоновой обработки здесь.
         
-        // Успешно завершите фоновую задачу
-        task.setTaskCompleted(success: true)
-        print("Background task completed.")
+        DispatchQueue.global(qos: .background).async {
+            // Ваш код фоновой обработки здесь.
+            
+            // После завершения обработки, отправьте уведомление.
+            self.sendNotifications()
+            
+            // Успешно завершите фоновую задачу
+            task.setTaskCompleted(success: true)
+            print("Background task completed.")
+        }
     }
+
+
     // MARK: - UserNotificationCenter
     let notificationCenter = UNUserNotificationCenter.current()
     

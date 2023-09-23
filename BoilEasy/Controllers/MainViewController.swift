@@ -72,16 +72,16 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         setupCircleLayer()
 //        notificationObserver()
     }
-// этот наблюдатель в фоне не работает, а просто запоминает момент остановки
-////    //MARK: Notification Center
+    //этот наблюдатель в фоне не работает, а просто запоминает момент остановки
+    //MARK: Notification Center
 //    private func notificationObserver() {
 //        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 //    }
 //    // Обработчик события UIApplication.didBecomeActiveNotification
 //    @objc private func appDidBecomeActive() {
-////        if isTimerRunning {
-////            updateTimerLabel() // Обновляем время, если таймер был запущен
-////        }
+//        if isTimerRunning {
+//            updateTimerLabel() // Обновляем время, если таймер был запущен
+//        }
 //        print("appDidBecomeActive")
 //    }
 //    // удаляем наблюдатель
@@ -230,18 +230,19 @@ extension MainViewController {
         // Запуск фоновой задачи
         scheduleBackgroundTask()
     }
-    private func scheduleBackgroundTask() {
+    func scheduleBackgroundTask() {
+        
         let request = BGProcessingTaskRequest(identifier: "com.BoilEasy.timerTask")
-        request.requiresNetworkConnectivity = false // Можете настроить требования задачи
+        request.requiresNetworkConnectivity = false
         request.requiresExternalPower = false
         
         do {
             try BGTaskScheduler.shared.submit(request)
+            print("Фоновая задача успешно запланирована.")
         } catch {
-            print("Не удалось запланировать фоновую задачу: \(error)")
+            print("Ошибка при запланировании фоновой задачи: \(error)")
         }
     }
-
     // stop Timer
     private func stopTimer() {
         isTimerRunning = false
@@ -270,6 +271,7 @@ extension MainViewController {
 //            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
 //            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
 //        }
+        
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
