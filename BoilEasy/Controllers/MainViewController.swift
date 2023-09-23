@@ -29,6 +29,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
 //    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     private let timerDurations = [5, 3, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+    private let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -70,6 +71,15 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         setupCircleLayer()
         notificationObserver()
     }
+ 
+    
+    
+    
+    
+    
+    
+    
+    
     //MARK: Notification Center
     private func notificationObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -194,7 +204,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
     }
-
+    
+    
 } // end
 //MARK: - Array
 extension Array {
@@ -241,6 +252,7 @@ extension MainViewController {
         } else {
             stopTimer()
             showAlert()
+            appDelegate.sendNotifications() // Вызовите функцию при старте таймера
         }
     }
     // updateTimerLabel
