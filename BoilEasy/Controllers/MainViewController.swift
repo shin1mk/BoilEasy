@@ -73,7 +73,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
     // setup circle Layer
     private func setupCircleLayer() {
         shapeLayer = CAShapeLayer()
@@ -223,7 +222,7 @@ extension MainViewController {
         secondsRemaining = timerDurations[currentIndex]
         updateTimerLabel()
         enableGestures(!isTimerRunning)
-        cancelNotification()
+        cancelNotification() // удаляем уведомление если таймер остановили вручную
     }
     // update Timer
     @objc private func updateTimer() {
@@ -358,14 +357,15 @@ extension MainViewController {
 }
 //MARK: - Notifications
 extension MainViewController {
-    //MARK: Notification Center
+    // notification Observer
     private func notificationObserver() {
+        // Добавляем наблюдателя за событием didBecomeActive приложения, приложение становится активным.
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     // Обработчик события UIApplication.didBecomeActiveNotification
     @objc private func appDidBecomeActive() {
         if isTimerRunning {
-            updateTimerLabel() // Обновляем время, если таймер был запущен
+            updateTimerLabel()
         }
     }
     // schedule notification
@@ -374,11 +374,11 @@ extension MainViewController {
         content.title = "Таймер завершен"
         content.body = "Пора!"
         content.sound = UNNotificationSound.default
-        
-        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex])) // Время выполнения уведомления
-        
-        let identifier = "TimerNotification" // Уникальный идентификатор
+        // Вычисляем время выполнения уведомления на основе продолжительности таймера и текущего времени.
+        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
+        let identifier = "TimerNotification"
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        // Создаем запрос на уведомление с указанными параметрами.
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { (error) in
@@ -391,7 +391,8 @@ extension MainViewController {
     }
     // cancel notification
     private func cancelNotification() {
-        let identifier = "TimerNotification" // Уникальный идентификатор уведомления
+        let identifier = "TimerNotification"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        print("Уведомление с идентификатором '\(identifier)' было отменено.")
     }
 }
