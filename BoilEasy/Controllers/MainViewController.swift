@@ -70,24 +70,24 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         updateTimerLabelForCurrentDifficulty()
         backgroundImage()
         setupCircleLayer()
-//        notificationObserver()
+        notificationObserver()
     }
     //этот наблюдатель в фоне не работает, а просто запоминает момент остановки
     //MARK: Notification Center
-//    private func notificationObserver() {
-//        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-//    }
-//    // Обработчик события UIApplication.didBecomeActiveNotification
-//    @objc private func appDidBecomeActive() {
-//        if isTimerRunning {
-//            updateTimerLabel() // Обновляем время, если таймер был запущен
-//        }
-//        print("appDidBecomeActive")
-//    }
-//    // удаляем наблюдатель
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
+    private func notificationObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    // Обработчик события UIApplication.didBecomeActiveNotification
+    @objc private func appDidBecomeActive() {
+        if isTimerRunning {
+            updateTimerLabel() // Обновляем время, если таймер был запущен
+        }
+        print("appDidBecomeActive")
+    }
+    // удаляем наблюдатель
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     // setup circle Layer
     private func setupCircleLayer() {
         shapeLayer = CAShapeLayer()
@@ -227,22 +227,52 @@ extension MainViewController {
         updateTimerLabel()
         animateCircle()
         
+        scheduleNotification() // Создать уведомление при запуске таймера
+
         // Запуск фоновой задачи
-        scheduleBackgroundTask()
+//        scheduleBackgroundTask()
     }
-    func scheduleBackgroundTask() {
-        
-        let request = BGProcessingTaskRequest(identifier: "com.BoilEasy.timerTask")
-        request.requiresNetworkConnectivity = false
-        request.requiresExternalPower = false
-        
-        do {
-            try BGTaskScheduler.shared.submit(request)
-            print("Фоновая задача успешно запланирована.")
-        } catch {
-            print("Ошибка при запланировании фоновой задачи: \(error)")
+    
+//    func scheduleBackgroundTask() {
+//        let request = BGProcessingTaskRequest(identifier: "com.BoilEasy.timerTask")
+//        request.requiresNetworkConnectivity = false
+//        request.requiresExternalPower = false
+//
+//        do {
+//            try BGTaskScheduler.shared.submit(request)
+//            print("Фоновая задача успешно запланирована.")
+//        } catch {
+//            print("Ошибка при запланировании фоновой задачи: \(error)")
+//        }
+//    }
+    
+    private func scheduleNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "Таймер завершен"
+        content.body = "Пора!"
+        content.sound = UNNotificationSound.default
+
+        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex])) // Время выполнения уведомления
+
+        let identifier = "TimerNotification" // Уникальный идентификатор
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                print("Ошибка при создании уведомления: \(error)")
+            } else {
+                print("Уведомление успешно создано.")
+            }
         }
     }
+    
+    private func cancelNotification() {
+        let identifier = "TimerNotification" // Уникальный идентификатор уведомления
+
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+    }
+
     // stop Timer
     private func stopTimer() {
         isTimerRunning = false
@@ -252,6 +282,7 @@ extension MainViewController {
         secondsRemaining = timerDurations[currentIndex]
         updateTimerLabel()
         enableGestures(!isTimerRunning)
+        cancelNotification()
     }
     // update Timer
     @objc private func updateTimer() {
@@ -261,17 +292,16 @@ extension MainViewController {
         } else {
             stopTimer()
 //            showAlert()
-            appDelegate.sendNotifications()
+//            appDelegate.sendNotifications()
         }
     }
     // updateTimerLabel
     private func updateTimerLabel() {
-//        if let startDate = startDate {
-//            let currentTime = Date()
-//            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
-//            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
-//        }
-        
+        if let startDate = startDate {
+            let currentTime = Date()
+            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
+            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
+        }
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
