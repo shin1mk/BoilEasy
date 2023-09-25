@@ -5,9 +5,7 @@
 //
 //  Created by SHIN MIKHAIL on 18.09.2023.
 //
-// добавить уведомление внутри приложения алерт
 // сделать другую кнопку
-// вибро
 
 import UIKit
 import SnapKit
@@ -21,13 +19,14 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         "Hard": UIImage(named: "hard.png")!
     ]
     private var shapeLayer: CAShapeLayer!
-    private var currentProgress: Float = 1.0 // Начнем с полной окружности круга
+    private var currentProgress: Float = 1.0 //  полная окружность круга
     private var currentIndex = 1 // текущий label
     private var startDate: Date?
     private var timer: Timer?
-    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
-    //    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+
+    private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
+    // private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     private let timerDurations = [60, 5, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     private let feedbackGenerator = UISelectionFeedbackGenerator()
 
@@ -45,6 +44,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         label.text = ""
         label.font = UIFont.SFUITextBold(ofSize: 35)
         label.textAlignment = .center
+        label.textColor = .white
         return label
     }()
     private let startButton: UIButton = {
@@ -59,6 +59,12 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
+    private let backgroundImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "background2.png") // Set the image here
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +73,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         setupDifficultyLabels()
         updateImageView()
         updateTimerLabelForCurrentDifficulty()
-        backgroundImage()
         setupCircleLayer()
         notificationObserver()
     }
@@ -110,14 +115,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         view.layer.addSublayer(shapeLayer)
     }
     //MARK: - Methods
-    private func backgroundImage() {
-        let backgroundImage = UIImage(named: "background2.png")
-        let backgroundImageView = UIImageView(image: backgroundImage)
-        backgroundImageView.contentMode = .scaleAspectFill // Вы можете выбрать нужный режим масштабирования
-        backgroundImageView.frame = view.bounds // Установите размеры фоновой картинки равными размерам вашего представления
-        backgroundImageView.layer.zPosition = 0
-        view.addSubview(backgroundImageView)
-    }
     // create Label
     private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
@@ -137,7 +134,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     }
     // update image view
     private func updateImageView() {
-        if let imageName = difficultyLabels[safe: currentIndex], let image = imagesForDifficulties[imageName] {
+        if let imageName = difficultyLabels[safe: currentIndex],
+           let image = imagesForDifficulties[imageName] {
             imageView.image = image
         }
     }
@@ -151,6 +149,11 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.top.equalTo(view).offset(180)
             make.width.equalTo(view)
             make.height.equalTo(50)
+        }
+        // background image view
+        view.addSubview(backgroundImageView)
+        backgroundImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         // title label
         view.addSubview(titleLabel)
@@ -174,7 +177,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-150) // значение для закрепления от низа
+            make.bottom.equalToSuperview().offset(-150)
             make.width.equalTo(150)
         }
         // start button
@@ -347,8 +350,7 @@ extension MainViewController {
         animateImage()
         animateLabels()
         updateTimerLabelForCurrentDifficulty()
-        // Добавьте виброотклик
-        feedbackGenerator.selectionChanged()
+        feedbackGenerator.selectionChanged() // Добавьте виброотклик
     }
 }
 //MARK: - Notifications
@@ -367,8 +369,8 @@ extension MainViewController {
     // schedule notification
     private func scheduleNotification() {
         let content = UNMutableNotificationContent()
-        content.title = "Таймер завершен"
-        content.body = "Пора!"
+        content.title = "BoilEasy"
+        content.body = "Таймер завершен"
         content.sound = UNNotificationSound.default
         // Вычисляем время выполнения уведомления на основе продолжительности таймера и текущего времени.
         let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
