@@ -7,6 +7,7 @@
 //
 // сделать другую кнопку
 
+import Foundation
 import UIKit
 import SnapKit
 import UserNotifications
@@ -26,8 +27,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
 
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
-    // private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
-    private let timerDurations = [60, 5, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
+    // private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
+    private let timerDurations = [60, 5, 10] 
     private let feedbackGenerator = UISelectionFeedbackGenerator()
 
     private let titleLabel: UILabel = {
@@ -64,6 +65,13 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         imageView.image = UIImage(named: "background.png") // Set the image here
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+    private let infoButton: UIButton = {
+        let button = UIButton()
+        let chevronImage = UIImage(systemName: "info.circle")
+        button.setImage(chevronImage, for: .normal)
+        button.tintColor = UIColor.white
+        return button
     }()
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -186,6 +194,14 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
+        }
+        // info button
+        view.addSubview(infoButton)
+        infoButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalTo(startButton)
+            make.width.equalTo(80)
+            make.height.equalTo(80)
         }
     }
 } // end
@@ -319,6 +335,7 @@ extension MainViewController {
     //MARK: - Target
     private func addTarget() {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+        infoButton.addTarget(self, action: #selector(infoButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
@@ -352,6 +369,13 @@ extension MainViewController {
         updateTimerLabelForCurrentDifficulty()
         feedbackGenerator.selectionChanged() // Добавьте виброотклик
     }
+    // infoView button
+    @objc private func infoButtonTapped() {
+        print("infoButtonTapped")
+        let infoViewController = InfoViewController()
+        infoViewController.modalPresentationStyle = .popover
+        present(infoViewController, animated: true, completion: nil)
+    }
 }
 //MARK: - Notifications
 extension MainViewController {
@@ -370,7 +394,7 @@ extension MainViewController {
     private func scheduleNotification() {
         let content = UNMutableNotificationContent()
         content.title = "BoilEasy"
-        content.body = "Таймер завершен"
+        content.body = "Timer"
         content.sound = UNNotificationSound.default
         // Вычисляем время выполнения уведомления на основе продолжительности таймера и текущего времени.
         let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
