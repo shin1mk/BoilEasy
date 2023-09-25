@@ -7,6 +7,7 @@
 //
 // добавить уведомление внутри приложения алерт
 // сделать другую кнопку
+// вибро
 
 import UIKit
 import SnapKit
@@ -28,7 +29,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
     //    private let timerDurations = [360, 480, 660] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
     private let timerDurations = [60, 5, 10] // Soft - 6 минут, Medium - 8 минут, Hard - 11 минут
-    
+    private let feedbackGenerator = UISelectionFeedbackGenerator()
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "How to boil eggs easy?"
@@ -87,7 +89,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         ).cgPath
         backgroundLayer.strokeColor = UIColor.systemGray.cgColor
         backgroundLayer.fillColor = UIColor.clear.cgColor
-        backgroundLayer.lineWidth = 8
+        backgroundLayer.lineWidth = 7
         backgroundLayer.lineCap = .round
         backgroundLayer.strokeEnd = 1
         view.layer.addSublayer(backgroundLayer)
@@ -102,7 +104,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         shapeLayer.path = circularPath.cgPath
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeColor = UIColor.white.cgColor
-        shapeLayer.lineWidth = 8
+        shapeLayer.lineWidth = 7
         shapeLayer.lineCap = .round
         shapeLayer.strokeEnd = 1
         view.layer.addSublayer(shapeLayer)
@@ -231,7 +233,9 @@ extension MainViewController {
             updateTimerLabel()
         } else {
             stopTimer()
-            //            showAlert()
+            setupCircleLayer()
+            animateCircle()
+            updateTimerLabelForCurrentDifficulty()
         }
     }
     // updateTimerLabel
@@ -257,16 +261,6 @@ extension MainViewController {
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
         updateImageView()
-    }
-    // alert
-    private func showAlert() {
-        let alertController = UIAlertController(title: "Таймер завершен", message: "Пора!", preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-        }
-        alertController.addAction(okAction)
-        
-        present(alertController, animated: true, completion: nil)
     }
 }
 //MARK: - Animation
@@ -353,6 +347,8 @@ extension MainViewController {
         animateImage()
         animateLabels()
         updateTimerLabelForCurrentDifficulty()
+        // Добавьте виброотклик
+        feedbackGenerator.selectionChanged()
     }
 }
 //MARK: - Notifications
