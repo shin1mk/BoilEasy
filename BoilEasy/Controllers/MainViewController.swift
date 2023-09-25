@@ -61,7 +61,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     }()
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "background2.png") // Set the image here
+        imageView.image = UIImage(named: "background.png") // Set the image here
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
