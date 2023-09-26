@@ -1,13 +1,10 @@
-
 //
 //  MainViewController.swift
 //  BoilEasy
 //
 //  Created by SHIN MIKHAIL on 18.09.2023.
 //
-// сделать другую кнопку
 
-import Foundation
 import UIKit
 import SnapKit
 import UserNotifications
@@ -127,7 +124,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private func createDifficultyLabel(text: String, tag: Int) -> UILabel {
         let label = UILabel()
         label.text = text
-        label.font = UIFont.SFUITextBold(ofSize: 22)
+        label.font = UIFont.SFUITextBold(ofSize: 25)
         label.textAlignment = .center
         label.tag = tag
         return label
@@ -194,14 +191,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
-        }
-        // info button
-        view.addSubview(infoButton)
-        infoButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-10)
-            make.centerY.equalTo(startButton)
-            make.width.equalTo(80)
-            make.height.equalTo(80)
         }
     }
 } // end
@@ -335,7 +324,6 @@ extension MainViewController {
     //MARK: - Target
     private func addTarget() {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-        infoButton.addTarget(self, action: #selector(infoButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
@@ -368,13 +356,6 @@ extension MainViewController {
         animateLabels()
         updateTimerLabelForCurrentDifficulty()
         feedbackGenerator.selectionChanged() // Добавьте виброотклик
-    }
-    // infoView button
-    @objc private func infoButtonTapped() {
-        print("infoButtonTapped")
-        let infoViewController = InfoViewController()
-        infoViewController.modalPresentationStyle = .popover
-        present(infoViewController, animated: true, completion: nil)
     }
 }
 //MARK: - Notifications
