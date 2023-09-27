@@ -620,6 +620,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F8NF33WRR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BoilEasy/Resources/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
@@ -653,6 +654,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5F8NF33WRR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BoilEasy/Resources/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";

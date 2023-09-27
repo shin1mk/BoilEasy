@@ -24,8 +24,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
 
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
-    // private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
-    private let timerDurations = [60, 5, 10] 
+     private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
+//    private let timerDurations = [60, 5, 10]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
 
     private let titleLabel: UILabel = {
@@ -206,8 +206,10 @@ extension MainViewController {
     @objc private func startButtonTapped() {
         if isTimerRunning {
             stopTimer()
+            feedbackGenerator.selectionChanged() // Добавьте виброотклик
         } else {
             startTimer()
+            feedbackGenerator.selectionChanged() // Добавьте виброотклик
         }
         enableGestures(!isTimerRunning) // откл жесты
     }
