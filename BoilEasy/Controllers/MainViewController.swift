@@ -380,7 +380,7 @@ extension MainViewController {
         content.body = "Таймер завершен!"
     
         // Устанавливаем звук таймера из файла "timer_sound.mp3"
-        if let soundURL = Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") {
+        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
             let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
             content.sound = soundAttachment
         } else {
