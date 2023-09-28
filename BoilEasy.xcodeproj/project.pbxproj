@@ -21,6 +21,7 @@
 		13E3D4762AB8BCB2004B13C7 /* BoilEasyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */; };
 		13E3D4782AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */; };
 		13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E3D4882AB8BD55004B13C7 /* MainViewController.swift */; };
+		13F739A72AC5805300EDC485 /* timer_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 13F739A42AC5801B00EDC485 /* timer_sound.mp3 */; };
 		9070E2D6F49E79212612227A /* Pods_BoilEasy_BoilEasyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */; };
 		C917621AE2BB8E5F4004D33F /* Pods_BoilEasy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D29232183EB2A7B64D7A56A1 /* Pods_BoilEasy.framework */; };
 		EE76B0BDD43782C3ACF4BFA6 /* Pods_BoilEasyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2023A9EC49536EB24DE2A4F /* Pods_BoilEasyTests.framework */; };
@@ -63,6 +64,7 @@
 		13E3D4752AB8BCB2004B13C7 /* BoilEasyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITests.swift; sourceTree = "<group>"; };
 		13E3D4772AB8BCB2004B13C7 /* BoilEasyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoilEasyUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		13E3D4882AB8BD55004B13C7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		13F739A42AC5801B00EDC485 /* timer_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = timer_sound.mp3; sourceTree = "<group>"; };
 		188A5E56635D58B6F1B0A9DC /* Pods-BoilEasy-BoilEasyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasy-BoilEasyUITests/Pods-BoilEasy-BoilEasyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		36E5CADAE52577629B9012A3 /* Pods-BoilEasyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.release.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.release.xcconfig"; sourceTree = "<group>"; };
 		5EA88A2FA5BA425F665BDFC0 /* Pods-BoilEasyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BoilEasyTests.debug.xcconfig"; path = "Target Support Files/Pods-BoilEasyTests/Pods-BoilEasyTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 		13E3D4862AB8BD0A004B13C7 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				13F739A62AC5804400EDC485 /* Sound */,
 				13E3D4872AB8BD1E004B13C7 /* Fonts */,
 				13E3D45D2AB8BCB2004B13C7 /* Assets.xcassets */,
 				13E3D4622AB8BCB2004B13C7 /* Info.plist */,
@@ -189,6 +192,14 @@
 				139057122ABA5D7B00EF40FE /* CustomFonts.swift */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		13F739A62AC5804400EDC485 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				13F739A42AC5801B00EDC485 /* timer_sound.mp3 */,
+			);
+			path = Sound;
 			sourceTree = "<group>";
 		};
 		60090E0EE40F6238E7C0CA52 /* Pods */ = {
@@ -323,6 +334,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13F739A72AC5805300EDC485 /* timer_sound.mp3 in Resources */,
 				1390571C2ABA5DB700EF40FE /* SFUIText-Light.ttf in Resources */,
 				1390571B2ABA5DB700EF40FE /* SFUIText-Heavy.ttf in Resources */,
 				13E3D45E2AB8BCB2004B13C7 /* Assets.xcassets in Resources */,

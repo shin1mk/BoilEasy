@@ -24,8 +24,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerRunning = false // Переменная для отслеживания состояния таймера
 
     private var secondsRemaining = 8 * 60 // Устанавливаем начальное время
-     private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
-//    private let timerDurations = [60, 5, 10]
+//     private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
+    private let timerDurations = [60, 5, 10]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
 
     private let titleLabel: UILabel = {
@@ -374,18 +374,52 @@ extension MainViewController {
         }
     }
     // schedule notification
+//    private func scheduleNotification() {
+//        let content = UNMutableNotificationContent()
+//        content.title = "BoilEasy"
+//        content.body = "Timer"
+//        content.sound = UNNotificationSound.default
+//        // Вычисляем время выполнения уведомления на основе продолжительности таймера и текущего времени.
+//        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
+//        let identifier = "TimerNotification"
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+//        // Создаем запрос на уведомление с указанными параметрами.
+//        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+//
+//        UNUserNotificationCenter.current().add(request) { (error) in
+//            if let error = error {
+//                print("Ошибка при создании уведомления: \(error)")
+//            } else {
+//                print("Уведомление успешно создано.")
+//            }
+//        }
+//    }
+    
     private func scheduleNotification() {
         let content = UNMutableNotificationContent()
         content.title = "BoilEasy"
-        content.body = "Timer"
-        content.sound = UNNotificationSound.default
+        content.body = "Таймер завершен!"
+
+        // Устанавливаем звук таймера из файла "timer_sound.mp3"
+        if let soundURL = Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") {
+            do {
+                let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+                content.sound = soundAttachment
+            } catch {
+                print("Ошибка при установке звука уведомления: \(error)")
+            }
+        } else {
+            print("Файл звука не найден.")
+        }
+
         // Вычисляем время выполнения уведомления на основе продолжительности таймера и текущего времени.
         let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
         let identifier = "TimerNotification"
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+
         // Создаем запрос на уведомление с указанными параметрами.
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        
+
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
                 print("Ошибка при создании уведомления: \(error)")
@@ -394,6 +428,7 @@ extension MainViewController {
             }
         }
     }
+
     // cancel notification
     private func cancelNotification() {
         let identifier = "TimerNotification"
