@@ -48,7 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             guard granted else { return }
             self.notificationCenter.getNotificationSettings { (settings) in
-//                print(settings)
                 guard settings.authorizationStatus == .authorized else { return }
             }
         }
@@ -59,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // MARK: - UserNotificationCenterDelegate
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .sound])
+        completionHandler([.banner, .sound])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
