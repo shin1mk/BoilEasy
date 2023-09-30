@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             guard granted else { return }
             self.notificationCenter.getNotificationSettings { (settings) in
-                print(settings)
+//                print(settings)
                 guard settings.authorizationStatus == .authorized else { return }
             }
         }
