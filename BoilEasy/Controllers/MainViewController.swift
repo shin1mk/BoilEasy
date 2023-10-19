@@ -22,10 +22,13 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var startDate: Date?
     private var timer: Timer?
     private var isTimerRunning = false // состояниe таймера
-    
+    // Добавьте переменную для хранения времени, оставшегося до паузы
+    private var pausedTime: Int?
+    private var isTimerPaused: Bool = false
+
     private var secondsRemaining = 8 * 60 // начальное время
-//    private let timerDurations = [300, 420, 600] // Soft - 5 минут, Medium - 7 минут, Hard - 10 минут
-        private let timerDurations = [60, 5, 10]
+//    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
+        private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -52,6 +55,20 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         button.setTitleColor(.white, for: .normal)
         return button
     }()
+    private let pauseButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("PAUSE", for: .normal)
+        button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 20)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    private let stopButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("STOP", for: .normal)
+        button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
     private let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "medium.png"))
         imageView.contentMode = .scaleAspectFill
@@ -73,7 +90,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        addTarget()
+        setupTarget()
         setupGestures()
         setupDifficultyLabels()
         updateImageView()
@@ -192,6 +209,13 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.centerX.equalToSuperview()
             make.top.equalTo(timerLabel.snp.bottom).offset(25)
         }
+        // start button
+        view.addSubview(pauseButton)
+        pauseButton.layer.zPosition = 1
+        pauseButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(startButton.snp.bottom).offset(10)
+        }
     }
 } // end
 //MARK: - Array
@@ -205,48 +229,72 @@ extension MainViewController {
     //MARK: - Timer
     @objc private func startButtonTapped() {
         if isTimerRunning {
-            stopTimer()
-            feedbackGenerator.selectionChanged() // виброотклик
+            stopButtonTapped()
         } else {
-            startTimer()
-            feedbackGenerator.selectionChanged() // виброотклик
+            if !isTimerPaused {
+                // Запускаем таймер только если он НЕ был приостановлен
+                startTimer()
+            } else {
+                // Если таймер был приостановлен, то нажатие "Старт" возобновит его
+                stopButtonTapped()
+            }
         }
+        feedbackGenerator.selectionChanged() // виброотклик
         enableGestures(!isTimerRunning) // откл жесты
     }
     // start Timer
     private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("CANCEL", for: .normal)
+        startButton.setTitle("STOP", for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-        
+
         startDate = Date() // Запоминаем текущую дату при старте таймера
         updateTimerLabel()
         animateCircle()
         scheduleNotification() // Создать уведомление при запуске таймера
     }
-    // stop Timer
-    private func stopTimer() {
+    // stop Timer reset
+    @objc private func stopButtonTapped() {
         isTimerRunning = false
+        isTimerPaused = false // Сбрасываем состояние паузы
+        
         startButton.setTitle("START", for: .normal)
-        timer?.invalidate()
+        timer?.invalidate() // Остановка таймера
         // Сбросить значение таймера на начальное
         secondsRemaining = timerDurations[currentIndex]
-        updateTimerLabel()
+        print("Setting secondsRemaining to \(timerDurations[currentIndex])")
+        // Обновить времени
+        updateTimerLabelForCurrentDifficulty()
+        // Сбросить состояние круга + animation
+        setupCircleLayer()
+        animateCircle()
         enableGestures(!isTimerRunning)
-        cancelNotification() // удаляем уведомление если таймер остановили вручную
+        cancelNotification() // Удалить уведомление, если таймер остановил
     }
-    // update Timer
-    @objc private func updateTimer() {
-        if secondsRemaining > 0 {
-            secondsRemaining -= 1
-            updateTimerLabel()
-        } else {
-            stopTimer()
-            setupCircleLayer()
-            animateCircle()
-            updateTimerLabelForCurrentDifficulty()
+    // pause
+    @objc private func pauseButtonTapped() {
+        if isTimerRunning {
+            isTimerRunning = false
+            isTimerPaused = true
+            pausedTime = secondsRemaining // Сохраняем текущее оставшееся время
+            pauseButton.setTitle("RESUME", for: .normal)
+            timer?.invalidate() // Останавливаем таймер
+        } else if isTimerPaused {
+            isTimerRunning = true
+            isTimerPaused = false
+            pauseButton.setTitle("PAUSE", for: .normal)
+            // Восстанавливаем таймер с сохраненным временем
+            startTimer(withRemainingTime: pausedTime)
         }
+        enableGestures(isTimerRunning)
+    }
+    // start timer
+    private func startTimer(withRemainingTime remainingTime: Int?) {
+        if let remainingTime = remainingTime {
+            secondsRemaining = remainingTime
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     // updateTimerLabel
     private func updateTimerLabel() {
@@ -263,6 +311,18 @@ extension MainViewController {
         let remainingTime = Float(secondsRemaining)
         currentProgress = 1.0 - (remainingTime / totalDuration)
         animateProgress(1.0 - currentProgress)
+    }
+    // update Timer
+    @objc private func updateTimer() {
+        if secondsRemaining > 0 {
+            secondsRemaining -= 1
+            updateTimerLabel()
+        } else {
+            stopButtonTapped()
+            setupCircleLayer()
+            animateCircle()
+            updateTimerLabelForCurrentDifficulty()
+        }
     }
     // updateTimerLabelForCurrentDifficulty
     private func updateTimerLabelForCurrentDifficulty() {
@@ -324,8 +384,10 @@ extension MainViewController {
 //MARK: - Gestures
 extension MainViewController {
     //MARK: - Target
-    private func addTarget() {
+    private func setupTarget() {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+        pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
+        stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
@@ -396,7 +458,6 @@ extension MainViewController {
         let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
         let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
-        
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
                 print("Ошибка при создании уведомления: \(error)")
