@@ -280,12 +280,14 @@ extension MainViewController {
             pausedTime = secondsRemaining // Сохраняем текущее оставшееся время
             pauseButton.setTitle("RESUME", for: .normal)
             timer?.invalidate() // Останавливаем таймер
+            pauseNotification() // Отменить уведомление
         } else if isTimerPaused {
             isTimerRunning = true
             isTimerPaused = false
             pauseButton.setTitle("PAUSE", for: .normal)
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
+            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Запланировать новое уведомление с оставшимся временем
         }
         enableGestures(isTimerRunning)
     }
@@ -298,11 +300,6 @@ extension MainViewController {
     }
     // updateTimerLabel
     private func updateTimerLabel() {
-        if let startDate = startDate {
-            let currentTime = Date()
-            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
-            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
-        }
         let minutes = secondsRemaining / 60
         let seconds = secondsRemaining % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
@@ -311,6 +308,14 @@ extension MainViewController {
         let remainingTime = Float(secondsRemaining)
         currentProgress = 1.0 - (remainingTime / totalDuration)
         animateProgress(1.0 - currentProgress)
+    }
+   // обновление секунд при возврате
+    private func updateSecondsRemaining() {
+        if let startDate = startDate {
+            let currentTime = Date()
+            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
+            secondsRemaining = max(timerDurations[currentIndex] - timeDifference, 0)
+        }
     }
     // update Timer
     @objc private func updateTimer() {
@@ -432,7 +437,7 @@ extension MainViewController {
     // Обработчик события UIApplication.didBecomeActiveNotification
     @objc private func appDidBecomeActive() {
         if isTimerRunning {
-            updateTimerLabel()
+            updateSecondsRemaining()
         }
     }
     // запланированное уведомление
@@ -445,7 +450,7 @@ extension MainViewController {
         // Создание контента уведомления
         let content = UNMutableNotificationContent()
         content.title = "BoilEasy"
-        content.body = "Timer!"
+        content.body = "Timer"
         content.categoryIdentifier = "TimerCategory" // Использование созданной категории
         // Устанавливаем звук таймера из файла "timer_sound.mp3"
         if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
@@ -471,5 +476,39 @@ extension MainViewController {
         let identifier = "TimerNotification"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
         print("Уведомление с идентификатором '\(identifier)' было отменено.")
+    }
+    // pause notification
+    private func pauseNotification() {
+        let identifier = "TimerNotification"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        print("Уведомление с идентификатором '\(identifier)' было поставлено на паузу.")
+    }
+    // scheduleNotificationWithRemainingTime
+    private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
+        print("Запланировано уведомление с оставшимся временем: \(remainingTime) секунд")
+
+        let content = UNMutableNotificationContent()
+        content.title = "BoilEasy"
+        content.body = "Timer"
+        content.categoryIdentifier = "TimerCategory"
+
+        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
+            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+            content.sound = soundAttachment
+        } else {
+            print("Файл звука не найден.")
+        }
+
+        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(remainingTime))
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                print("Ошибка при создании уведомления: \(error)")
+            } else {
+                print("Уведомление успешно создано.")
+            }
+        }
     }
 }
