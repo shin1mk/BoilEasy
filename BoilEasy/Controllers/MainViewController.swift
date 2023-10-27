@@ -199,7 +199,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-150)
+            make.bottom.equalToSuperview().offset(-170)
             make.width.equalTo(150)
         }
         // start button
@@ -214,7 +214,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         pauseButton.layer.zPosition = 1
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startButton.snp.bottom).offset(10)
+            make.top.equalTo(startButton.snp.bottom).offset(5)
         }
     }
 } // end
@@ -258,7 +258,7 @@ extension MainViewController {
     @objc private func stopButtonTapped() {
         isTimerRunning = false
         isTimerPaused = false // Сбрасываем состояние паузы
-        
+
         startButton.setTitle("START", for: .normal)
         timer?.invalidate() // Остановка таймера
         // Сбросить значение таймера на начальное
@@ -271,6 +271,7 @@ extension MainViewController {
         animateCircle()
         enableGestures(!isTimerRunning)
         cancelNotification() // Удалить уведомление, если таймер остановил
+        feedbackGenerator.selectionChanged() // виброотклик
     }
     // pause
     @objc private func pauseButtonTapped() {
@@ -290,6 +291,8 @@ extension MainViewController {
             scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Запланировать новое уведомление с оставшимся временем
         }
         enableGestures(isTimerRunning)
+        feedbackGenerator.selectionChanged() // виброотклик
+
     }
     // start timer
     private func startTimer(withRemainingTime remainingTime: Int?) {
