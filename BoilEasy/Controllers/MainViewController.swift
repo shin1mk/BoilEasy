@@ -168,7 +168,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         difficultyLabels.layer.zPosition = 1
         difficultyLabels.snp.makeConstraints { make in
             make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
-            make.top.equalTo(view).offset(180)
+            make.top.equalTo(view).offset(135)
             make.width.equalTo(view)
             make.height.equalTo(50)
         }
@@ -181,7 +181,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         view.addSubview(titleLabel)
         titleLabel.layer.zPosition = 1
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view).offset(75)
+            make.top.equalTo(view).offset(50)
             make.centerX.equalTo(view)
             make.width.equalTo(300)
         }
@@ -199,7 +199,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         timerLabel.layer.zPosition = 1
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-170)
+            make.bottom.equalToSuperview().offset(-125)
             make.width.equalTo(150)
         }
         // start button
@@ -207,9 +207,9 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         startButton.layer.zPosition = 1
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timerLabel.snp.bottom).offset(25)
+            make.top.equalTo(timerLabel.snp.bottom).offset(5)
         }
-        // start button
+        // pause button
         view.addSubview(pauseButton)
         pauseButton.layer.zPosition = 1
         pauseButton.snp.makeConstraints { make in
