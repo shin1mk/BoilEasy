@@ -54,7 +54,7 @@ final class CustomTimerController: UIViewController {
     }()
     private let timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "00:00"
+        label.text = "00:00:00"
         label.font = UIFont.SFUITextBold(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
@@ -122,7 +122,7 @@ final class CustomTimerController: UIViewController {
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(pickerView.snp.bottom).offset(120)
-            make.width.equalTo(150)
+            make.width.equalTo(250)
         }
         // start button
         view.addSubview(startButton)
@@ -176,6 +176,7 @@ final class CustomTimerController: UIViewController {
     // target
     private func setupTarget() {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
+        pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
     }
 } // end
 //MARK: PickerView
@@ -227,46 +228,28 @@ extension CustomTimerController: UIPickerViewDelegate, UIPickerViewDataSource{
 //MARK: Timer
 extension CustomTimerController {
     @objc private func startButtonTapped() {
+        guard selectedHours != 0 || selectedMinutes != 0 || selectedSeconds != 0 else {
+            // Ничего не делаем, так как время не выбрано
+            return
+        }
+        
         if isTimerRunning {
             stopButtonTapped()
         } else {
             if !isTimerPaused {
                 // Установите secondsRemaining в выбранное пользователем значение времени
                 secondsRemaining = selectedTime
-                // Запустите таймер
                 startTimer()
             } else {
-                // Если таймер был приостановлен, то нажатие "Старт" возобновит его
                 stopButtonTapped()
             }
         }
         feedbackGenerator.selectionChanged() // виброотклик
     }
-    @objc func timerFired() {
-        remainingTime -= 1
-
-        if remainingTime > 0 {
-            let hours = remainingTime / 3600
-            let minutes = (remainingTime % 3600) / 60
-            let seconds = remainingTime % 60
-
-            timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-            print("Отсчет времени идет... \(hours):\(minutes):\(seconds) секунд") // Вывод сообщения в консоль
-        } else {
-            // Отсчет завершен
-            timer?.invalidate()
-            timerLabel.text = "00:00:00"
-            isTimerRunning = false
-            feedbackGenerator.selectionChanged() // виброотклик
-
-            // Добавьте здесь действия, которые вы хотите выполнить по завершении отсчета.
-        }
-    }
-
+    
     @objc func startTimer() {
         isTimerRunning = true
         startButton.setTitle("STOP", for: .normal)
-        
         selectedTime = (selectedHours * 3600) + (selectedMinutes * 60) + selectedSeconds
         remainingTime = selectedTime
         isTimerRunning = true
@@ -281,11 +264,38 @@ extension CustomTimerController {
         
         startDate = Date() // Запоминаем текущую дату при старте таймера
         print(startDate!)
-        // ... остальной код ...
 
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
     }
 
+    @objc func timerFired() {
+        remainingTime -= 1
+
+        if remainingTime > 0 {
+            let progress = Float(remainingTime) / Float(selectedTime)
+            
+            // Update the progress of the shapeLayer
+            animateProgress(progress)
+            
+            let hours = remainingTime / 3600
+            let minutes = (remainingTime % 3600) / 60
+            let seconds = remainingTime % 60
+
+            timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+            print("Отсчет времени идет... \(hours):\(minutes):\(seconds) секунд") // Вывод сообщения в консоль
+        } else {
+            // Отсчет завершен
+            timer?.invalidate()
+            timerLabel.text = "00:00:00"
+            isTimerRunning = false
+            feedbackGenerator.selectionChanged() // виброотклик
+
+            // Вернуться в исходное состояние
+            startButton.setTitle("START", for: .normal)
+            hideCircleLayer()
+            pickerView.alpha = 1
+        }
+    }
     // stop Timer reset
     @objc private func stopButtonTapped() {
         isTimerRunning = false
@@ -294,12 +304,57 @@ extension CustomTimerController {
         pickerView.alpha = 1
 
         startButton.setTitle("START", for: .normal)
-//        timer?.invalidate() // Остановка таймера
+        timer?.invalidate() // Остановка таймера
+        timerLabel.text = "00:00:00"
 
         hideCircleLayer()
         feedbackGenerator.selectionChanged() // виброотклик
     }
- 
+    // pause
+    @objc private func pauseButtonTapped() {
+        if isTimerRunning {
+            pauseTimer()
+        } else if isTimerPaused {
+            resumeTimer()
+        }
+        feedbackGenerator.selectionChanged() // виброотклик
+    }
+
+    private func pauseTimer() {
+        if isTimerRunning {
+            isTimerRunning = false
+            isTimerPaused = true
+            pausedTime = remainingTime // Сохраняем текущее оставшееся время
+            pauseButton.setTitle("RESUME", for: .normal)
+            timer?.invalidate() // Останавливаем таймер
+            print("Timer paused at \(remainingTime) seconds") // Принт паузы
+
+//            pauseNotification() // Отменить уведомление
+        }
+//        enableGestures(isTimerRunning)
+    }
+
+    private func resumeTimer() {
+        if isTimerPaused {
+            isTimerRunning = true
+            isTimerPaused = false
+            pauseButton.setTitle("PAUSE", for: .normal)
+            // Восстанавливаем таймер с сохраненным временем
+            startTimer(withRemainingTime: pausedTime)
+            print("Timer resumed with \(remainingTime) seconds remaining") // Принт возобновления
+
+        }
+        feedbackGenerator.selectionChanged() // виброотклик
+    }
+
+    private func startTimer(withRemainingTime remainingTime: Int?) {
+        if let remainingTime = remainingTime {
+            self.remainingTime = remainingTime
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+//        print("Timer started with \(String(describing: remainingTime)) seconds remaining") // Принт старта таймера
+    }
+
 }
 //MARK: Animations
 extension CustomTimerController {
