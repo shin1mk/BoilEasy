@@ -27,8 +27,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerPaused: Bool = false
 
     private var secondsRemaining = 8 * 60 // начальное время
-    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
-//        private let timerDurations = [60, 4, 15]
+//    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
+    private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -80,9 +80,16 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    private let infoButton: UIButton = {
+    private let customTimerButton: UIButton = {
         let button = UIButton()
-        let chevronImage = UIImage(systemName: "info.circle")
+        let chevronImage = UIImage(systemName: "timer")
+        button.setImage(chevronImage, for: .normal)
+        button.tintColor = UIColor.white
+        return button
+    }()
+    private let customStopwatchButton: UIButton = {
+        let button = UIButton()
+        let chevronImage = UIImage(systemName: "stopwatch")
         button.setImage(chevronImage, for: .normal)
         button.tintColor = UIColor.white
         return button
@@ -216,6 +223,20 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.centerX.equalToSuperview()
             make.top.equalTo(startButton.snp.bottom).offset(5)
         }
+        // customTimerButton
+        view.addSubview(customTimerButton)
+        customTimerButton.layer.zPosition = 1
+        customTimerButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(30)
+            make.top.equalTo(startButton.snp.bottom).offset(5)
+        }
+        // customTimerButton
+        view.addSubview(customStopwatchButton)
+        customStopwatchButton.layer.zPosition = 1
+        customStopwatchButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-30)
+            make.top.equalTo(startButton.snp.bottom).offset(5)
+        }
     }
 } // end
 //MARK: - Array
@@ -340,6 +361,24 @@ extension MainViewController {
         timerLabel.text = timeString
         updateImageView()
     }
+    
+    @objc private func customTimerButtonTapped() {
+        print("infoButtonTapped")
+        feedbackGenerator.selectionChanged() // Добавьте виброотклик
+        
+        let CustomTimerController = CustomTimerController()
+        CustomTimerController.modalPresentationStyle = .popover
+        present(CustomTimerController, animated: true, completion: nil)
+    }
+    
+    @objc private func customStopwatchButtonTapped() {
+        print("infoButtonTapped")
+//        feedbackGenerator.selectionChanged() // Добавьте виброотклик
+//
+//        let CustomTimerController = CustomTimerController()
+//        CustomTimerController.modalPresentationStyle = .popover
+//        present(CustomTimerController, animated: true, completion: nil)
+    }
 }
 //MARK: - Animation
 extension MainViewController {
@@ -396,6 +435,8 @@ extension MainViewController {
         startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
+        customTimerButton.addTarget(self, action: #selector(customTimerButtonTapped), for: .touchUpInside)
+        customStopwatchButton.addTarget(self, action: #selector(customStopwatchButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
