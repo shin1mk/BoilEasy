@@ -27,8 +27,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerPaused: Bool = false
 
     private var secondsRemaining = 8 * 60 // начальное время
-//    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
-    private let timerDurations = [60, 4, 15]
+    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
+//    private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -275,6 +275,13 @@ extension MainViewController {
         animateCircle()
         scheduleNotification() // Создать уведомление при запуске таймера
     }
+    // start timer
+    private func startTimer(withRemainingTime remainingTime: Int?) {
+        if let remainingTime = remainingTime {
+            secondsRemaining = remainingTime
+        }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
     // stop Timer reset
     @objc private func stopButtonTapped() {
         isTimerRunning = false
@@ -309,19 +316,12 @@ extension MainViewController {
             pauseButton.setTitle("PAUSE", for: .normal)
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
-            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Запланировать новое уведомление с оставшимся временем
+            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // новое уведомление с оставшимся временем
         }
         enableGestures(isTimerRunning)
         feedbackGenerator.selectionChanged() // виброотклик
-
     }
-    // start timer
-    private func startTimer(withRemainingTime remainingTime: Int?) {
-        if let remainingTime = remainingTime {
-            secondsRemaining = remainingTime
-        }
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-    }
+ 
     // updateTimerLabel
     private func updateTimerLabel() {
         let minutes = secondsRemaining / 60
@@ -382,7 +382,7 @@ extension MainViewController {
 }
 //MARK: - Animation
 extension MainViewController {
-    //MARK: - Animate
+    // Animate
     private func animateLabels() {
         UIView.animate(withDuration: 0.7) {
             for (index, label) in self.view.subviews.enumerated() {

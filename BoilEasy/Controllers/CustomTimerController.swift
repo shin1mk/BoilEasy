@@ -12,8 +12,7 @@ import UserNotifications
 final class CustomTimerController: UIViewController {
     private let pickerView = UIPickerView()
     private var shapeLayer: CAShapeLayer!
-    private var backgroundLayer: CAShapeLayer! //
-
+    private var backgroundLayer: CAShapeLayer!
     private let feedbackGenerator = UISelectionFeedbackGenerator()
 
     private let hours = Array(0...23)
@@ -32,7 +31,6 @@ final class CustomTimerController: UIViewController {
     private var secondsRemaining: Int = 0
 
     private var isTimerRunning = false // состояниe таймера
-    
     // Добавьте переменную для хранения времени, оставшегося до паузы
     private var pausedTime: Int?
     private var isTimerPaused: Bool = false
@@ -86,6 +84,11 @@ final class CustomTimerController: UIViewController {
         setupPickerUI()
         setupConstraints()
         setupTarget()
+        notificationObserver()
+    }
+    // удаляем наблюдатель
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     // clock
     private func setupPickerUI() {
@@ -227,17 +230,16 @@ extension CustomTimerController: UIPickerViewDelegate, UIPickerViewDataSource{
 }
 //MARK: Timer
 extension CustomTimerController {
+    // start button tapped
     @objc private func startButtonTapped() {
         guard selectedHours != 0 || selectedMinutes != 0 || selectedSeconds != 0 else {
-            // Ничего не делаем, так как время не выбрано
             return
         }
-        
         if isTimerRunning {
             stopButtonTapped()
         } else {
             if !isTimerPaused {
-                // Установите secondsRemaining в выбранное пользователем значение времени
+                // secondsRemaining в выбранное значение
                 secondsRemaining = selectedTime
                 startTimer()
             } else {
@@ -246,81 +248,47 @@ extension CustomTimerController {
         }
         feedbackGenerator.selectionChanged() // виброотклик
     }
-    
-    @objc func startTimer() {
+    // start timer func
+    @objc private func startTimer() {
         isTimerRunning = true
         startButton.setTitle("STOP", for: .normal)
+        // Рассчитываем выбранное время в секундах
         selectedTime = (selectedHours * 3600) + (selectedMinutes * 60) + selectedSeconds
         remainingTime = selectedTime
-        isTimerRunning = true
-        startButton.setTitle("STOP", for: .normal)
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         
-        let totalSeconds = (selectedHours * 3600) + (selectedMinutes * 60) + selectedSeconds
-        print("Starting timer with \(totalSeconds) seconds")
-
-        hidePickerViewAnimation()// Скроем UIPickerView
-        setupCircleLayer() // Вызовем метод для настройки и показа круговой анимации
-        animateCircle() // Запустим анимацию круга
-        
-        startDate = Date() // Запоминаем текущую дату при старте таймера
+        startDate = Date() // Запоминаем дату и время старта таймера
         print(startDate!)
+        updateTimerLabel()
+        setupCircleLayer()
+        animateCircle()
 
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        hidePickerViewAnimation()
+        print("Starting timer with \(selectedTime) seconds")
     }
-
-    @objc func timerFired() {
-        remainingTime -= 1
-
-        if remainingTime > 0 {
-            let progress = Float(remainingTime) / Float(selectedTime)
-            
-            // Update the progress of the shapeLayer
-            animateProgress(progress)
-            
-            let hours = remainingTime / 3600
-            let minutes = (remainingTime % 3600) / 60
-            let seconds = remainingTime % 60
-
-            timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-            print("Отсчет времени идет... \(hours):\(minutes):\(seconds) секунд") // Вывод сообщения в консоль
-        } else {
-            // Отсчет завершен
-            timer?.invalidate()
-            timerLabel.text = "00:00:00"
-            isTimerRunning = false
-            feedbackGenerator.selectionChanged() // виброотклик
-
-            // Вернуться в исходное состояние
-            startButton.setTitle("START", for: .normal)
-            hideCircleLayer()
-            pickerView.alpha = 1
+    // start timer with remaining time
+    private func startTimer(withRemainingTime remainingTime: Int?) {
+        if let remainingTime = remainingTime {
+            self.remainingTime = remainingTime
         }
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
-    // stop Timer reset
+    // stop Timer and reset
     @objc private func stopButtonTapped() {
         isTimerRunning = false
         isTimerPaused = false // Сбрасываем состояние паузы
 
-        pickerView.alpha = 1
-
         startButton.setTitle("START", for: .normal)
         timer?.invalidate() // Остановка таймера
-        timerLabel.text = "00:00:00"
 
+        pickerView.alpha = 1
+//        timerLabel.text = "00:00:00"
         hideCircleLayer()
+        // cancelNotification() // Удалить уведомление, если таймер остановил
         feedbackGenerator.selectionChanged() // виброотклик
     }
-    // pause
+    // pause button tapped
     @objc private func pauseButtonTapped() {
-        if isTimerRunning {
-            pauseTimer()
-        } else if isTimerPaused {
-            resumeTimer()
-        }
-        feedbackGenerator.selectionChanged() // виброотклик
-    }
-
-    private func pauseTimer() {
         if isTimerRunning {
             isTimerRunning = false
             isTimerPaused = true
@@ -328,33 +296,55 @@ extension CustomTimerController {
             pauseButton.setTitle("RESUME", for: .normal)
             timer?.invalidate() // Останавливаем таймер
             print("Timer paused at \(remainingTime) seconds") // Принт паузы
-
 //            pauseNotification() // Отменить уведомление
-        }
-//        enableGestures(isTimerRunning)
-    }
-
-    private func resumeTimer() {
-        if isTimerPaused {
+        } else if isTimerPaused {
             isTimerRunning = true
             isTimerPaused = false
             pauseButton.setTitle("PAUSE", for: .normal)
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
             print("Timer resumed with \(remainingTime) seconds remaining") // Принт возобновления
-
+//            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // новое уведомление с оставшимся временем
         }
         feedbackGenerator.selectionChanged() // виброотклик
     }
-
-    private func startTimer(withRemainingTime remainingTime: Int?) {
-        if let remainingTime = remainingTime {
-            self.remainingTime = remainingTime
-        }
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
-//        print("Timer started with \(String(describing: remainingTime)) seconds remaining") // Принт старта таймера
+    // update timer label
+    private func updateTimerLabel() {
+        // Обновляем метку времени на экране
+        let hours = remainingTime / 3600
+        let minutes = (remainingTime % 3600) / 60
+        let seconds = remainingTime % 60
+        timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
-
+    // обновление секунд при возврате
+    private func updateSecondsRemaining() {
+        if let startDate = startDate {
+            let currentTime = Date()
+            let timeDifference = Int(currentTime.timeIntervalSince(startDate))
+            
+            if isTimerRunning {
+                secondsRemaining = max(selectedTime - timeDifference, 0)
+            } else {
+                secondsRemaining = max(remainingTime - timeDifference, 0)
+            }
+            print("Time Difference: \(timeDifference)")
+            print("Seconds Remaining: \(secondsRemaining)")
+        }
+    }
+    // update timer
+    @objc private func updateTimer() {
+        // Уменьшаем время на 1 секунду
+        remainingTime -= 1
+        // Рассчитываем прогресс таймера
+        let progress = Float(remainingTime) / Float(selectedTime)
+        // Обновляем интерфейс
+        animateProgress(progress)
+        updateTimerLabel()
+        // Если время вышло, останавливаем таймер
+        if remainingTime <= 0 {
+            stopButtonTapped()
+        }
+    }
 }
 //MARK: Animations
 extension CustomTimerController {
@@ -372,7 +362,7 @@ extension CustomTimerController {
         shapeLayer.add(colorAnimation, forKey: "colorAnimation")
         shapeLayer.strokeColor = UIColor.white.cgColor
     }
-    // Устанавливает прогресс анимации окружности
+    // прогресс анимации окружности
     private func animateProgress(_ progress: Float) {
         shapeLayer.strokeEnd = CGFloat(progress)
     }
@@ -402,3 +392,92 @@ extension CustomTimerController {
         CATransaction.commit()
     }
 }
+//MARK: - Notifications
+extension CustomTimerController {
+    // notification Observer
+    private func notificationObserver() {
+        // Добавляем наблюдателя за событием didBecomeActive приложения, приложение становится активным.
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    // Обработчик события UIApplication.didBecomeActiveNotification
+    @objc private func appDidBecomeActive() {
+        if isTimerRunning {
+            updateSecondsRemaining()
+        }
+        
+        //    // запланированное уведомление
+        //    private func scheduleNotification() {
+        //        // Создание категории уведомления
+        //        let stopAction = UNNotificationAction(identifier: "StopAction", title: "Остановить", options: [])
+        //        let timerCategory = UNNotificationCategory(identifier: "TimerCategory", actions: [stopAction], intentIdentifiers: [], options: [])
+        //        // Зарегистрируйте категории уведомления
+        //        UNUserNotificationCenter.current().setNotificationCategories([timerCategory])
+        //        // Создание контента уведомления
+        //        let content = UNMutableNotificationContent()
+        //        content.title = "BoilEasy"
+        //        content.body = "Timer"
+        //        content.categoryIdentifier = "TimerCategory" // Использование созданной категории
+        //        // Устанавливаем звук таймера из файла "timer_sound.mp3"
+        //        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
+        //            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+        //            content.sound = soundAttachment
+        //        } else {
+        //            print("Файл звука не найден.")
+        //        }
+        //        // Запланируйте и отобразите уведомление
+        //        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
+        //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        //        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
+        //        UNUserNotificationCenter.current().add(request) { (error) in
+        //            if let error = error {
+        //                print("Ошибка при создании уведомления: \(error)")
+        //            } else {
+        //                print("Уведомление успешно создано.")
+        //            }
+        //        }
+        //    }
+        //    // cancel notification
+        //    private func cancelNotification() {
+        //        let identifier = "TimerNotification"
+        //        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        //        print("Уведомление с идентификатором '\(identifier)' было отменено.")
+        //    }
+        //    // pause notification
+        //    private func pauseNotification() {
+        //        let identifier = "TimerNotification"
+        //        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        //        print("Уведомление с идентификатором '\(identifier)' было поставлено на паузу.")
+        //    }
+        //    // scheduleNotificationWithRemainingTime
+        //    private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
+        //        print("Запланировано уведомление с оставшимся временем: \(remainingTime) секунд")
+        //
+        //        let content = UNMutableNotificationContent()
+        //        content.title = "BoilEasy"
+        //        content.body = "Timer"
+        //        content.categoryIdentifier = "TimerCategory"
+        //
+        //        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
+        //            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+        //            content.sound = soundAttachment
+        //        } else {
+        //            print("Файл звука не найден.")
+        //        }
+        //
+        //        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(remainingTime))
+        //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        //        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
+        //
+        //        UNUserNotificationCenter.current().add(request) { (error) in
+        //            if let error = error {
+        //                print("Ошибка при создании уведомления: \(error)")
+        //            } else {
+        //                print("Уведомление успешно создано.")
+        //            }
+        //        }
+        //
+    }
+}
+
+// состояние кольца сбрасывается
+// лейбл часов не обновляется
