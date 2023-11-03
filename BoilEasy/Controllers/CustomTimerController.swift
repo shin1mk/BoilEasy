@@ -52,7 +52,7 @@ final class CustomTimerController: UIViewController {
     }()
     private let timerLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
+        label.text = "00:00:00"
         label.font = UIFont.SFUITextBold(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
@@ -239,7 +239,7 @@ extension CustomTimerController {
             if !isTimerPaused {
                 startTimer()
             } else {
-                pauseButtonTapped()
+                stopButtonTapped()
             }
         }
         feedbackGenerator.selectionChanged() // виброотклик
@@ -310,34 +310,37 @@ extension CustomTimerController {
         feedbackGenerator.selectionChanged() // виброотклик
     }
     // update timer label
-//    private func updateTimerLabel() {
-//        // Обновляем метку времени на экране
-//        let hours = remainingTime / 3600
-//        let minutes = (remainingTime % 3600) / 60
-//        let seconds = remainingTime % 60
-//        timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-//    }
     private func updateTimerLabel() {
-        // Обновляем метку времени на экране
-        let hours = remainingTime / 3600
-        let minutes = (remainingTime % 3600) / 60
-        let seconds = remainingTime % 60
-        let timeString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-    }
-
-    // обновление секунд при возврате
-    private func updateSecondsRemaining() {
+        var updatedSecondsRemaining = 0
+        
         if let startDate = startDate {
             let currentTime = Date()
             let timeDifference = Int(currentTime.timeIntervalSince(startDate))
             
             if isTimerRunning {
-                secondsRemaining = max(selectedTime - timeDifference, 0)
+                updatedSecondsRemaining = max(selectedTime - timeDifference, 0)
             } else {
-                secondsRemaining = max(remainingTime - timeDifference, 0)
+                updatedSecondsRemaining = max(remainingTime - timeDifference, 0)
             }
+            
             print("Time Difference: \(timeDifference)")
-            print("Seconds Remaining: \(secondsRemaining)")
+            print("Seconds Remaining: \(updatedSecondsRemaining)")
+        }
+        
+        let hours = updatedSecondsRemaining / 3600
+        let minutes = (updatedSecondsRemaining % 3600) / 60
+        let seconds = updatedSecondsRemaining % 60
+        let formattedTime = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        
+        DispatchQueue.main.async {
+            self.timerLabel.text = formattedTime
+            let progress = Float(updatedSecondsRemaining) / Float(self.selectedTime)
+            // Update the circle animation
+            self.animateProgress(progress)
+            // Check if the timer has completed
+            if updatedSecondsRemaining == 0 {
+                self.stopButtonTapped()
+            }
         }
     }
     // update timer
@@ -413,7 +416,7 @@ extension CustomTimerController {
     // Обработчик события UIApplication.didBecomeActiveNotification
     @objc private func appDidBecomeActive() {
         if isTimerRunning {
-            updateSecondsRemaining()
+            updateTimerLabel()
         }
     }
     // запланированное уведомление
