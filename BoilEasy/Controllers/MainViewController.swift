@@ -27,8 +27,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerPaused: Bool = false
 
     private var secondsRemaining = 8 * 60 // начальное время
-    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
-//    private let timerDurations = [60, 4, 15]
+//    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
+    private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -257,7 +257,7 @@ extension MainViewController {
                 startTimer()
             } else {
                 // Если таймер был приостановлен, то нажатие "Старт" возобновит его
-                stopButtonTapped()
+                pauseButtonTapped()
             }
         }
         feedbackGenerator.selectionChanged() // виброотклик

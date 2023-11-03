@@ -52,7 +52,7 @@ final class CustomTimerController: UIViewController {
     }()
     private let timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "00:00:00"
+        label.text = ""
         label.font = UIFont.SFUITextBold(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
@@ -108,7 +108,6 @@ final class CustomTimerController: UIViewController {
         }
         // title label
         view.addSubview(titleLabel)
-        titleLabel.layer.zPosition = 1
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(view).offset(30)
             make.centerX.equalTo(view)
@@ -136,7 +135,6 @@ final class CustomTimerController: UIViewController {
         }
         // pause button
         view.addSubview(pauseButton)
-        pauseButton.layer.zPosition = 1
         pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(startButton.snp.bottom).offset(5)
@@ -239,11 +237,9 @@ extension CustomTimerController {
             stopButtonTapped()
         } else {
             if !isTimerPaused {
-                // secondsRemaining в выбранное значение
-                secondsRemaining = selectedTime
                 startTimer()
             } else {
-                stopButtonTapped()
+                pauseButtonTapped()
             }
         }
         feedbackGenerator.selectionChanged() // виброотклик
@@ -265,6 +261,7 @@ extension CustomTimerController {
 
         hidePickerViewAnimation()
         print("Starting timer with \(selectedTime) seconds")
+        scheduleNotification() // Создать уведомление при запуске таймера
     }
     // start timer with remaining time
     private func startTimer(withRemainingTime remainingTime: Int?) {
@@ -282,10 +279,14 @@ extension CustomTimerController {
         timer?.invalidate() // Остановка таймера
 
         pickerView.alpha = 1
-//        timerLabel.text = "00:00:00"
+        timerLabel.text = "00:00:00"
         hideCircleLayer()
-        // cancelNotification() // Удалить уведомление, если таймер остановил
-        feedbackGenerator.selectionChanged() // виброотклик
+        // если завершился таймер самостоятельно
+        if remainingTime <= 0 {
+            feedbackGenerator.selectionChanged() // виброотклик
+        } else {
+            cancelNotification() // Удалить уведомление, если таймер остановлен вручную
+        }
     }
     // pause button tapped
     @objc private func pauseButtonTapped() {
@@ -296,7 +297,7 @@ extension CustomTimerController {
             pauseButton.setTitle("RESUME", for: .normal)
             timer?.invalidate() // Останавливаем таймер
             print("Timer paused at \(remainingTime) seconds") // Принт паузы
-//            pauseNotification() // Отменить уведомление
+            pauseNotification() // Отменить уведомление
         } else if isTimerPaused {
             isTimerRunning = true
             isTimerPaused = false
@@ -304,18 +305,26 @@ extension CustomTimerController {
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
             print("Timer resumed with \(remainingTime) seconds remaining") // Принт возобновления
-//            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // новое уведомление с оставшимся временем
+            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // уведомление с оставшимся временем
         }
         feedbackGenerator.selectionChanged() // виброотклик
     }
     // update timer label
+//    private func updateTimerLabel() {
+//        // Обновляем метку времени на экране
+//        let hours = remainingTime / 3600
+//        let minutes = (remainingTime % 3600) / 60
+//        let seconds = remainingTime % 60
+//        timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+//    }
     private func updateTimerLabel() {
         // Обновляем метку времени на экране
         let hours = remainingTime / 3600
         let minutes = (remainingTime % 3600) / 60
         let seconds = remainingTime % 60
-        timerLabel.text = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        let timeString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
+
     // обновление секунд при возврате
     private func updateSecondsRemaining() {
         if let startDate = startDate {
@@ -335,6 +344,8 @@ extension CustomTimerController {
     @objc private func updateTimer() {
         // Уменьшаем время на 1 секунду
         remainingTime -= 1
+        // Обновляем secondsRemaining
+        secondsRemaining = max(remainingTime, 0)
         // Рассчитываем прогресс таймера
         let progress = Float(remainingTime) / Float(selectedTime)
         // Обновляем интерфейс
@@ -404,80 +415,76 @@ extension CustomTimerController {
         if isTimerRunning {
             updateSecondsRemaining()
         }
+    }
+    // запланированное уведомление
+    private func scheduleNotification() {
+        // Создание категории уведомления
+        let stopAction = UNNotificationAction(identifier: "StopAction", title: "Остановить", options: [])
+        let timerCategory = UNNotificationCategory(identifier: "TimerCategory", actions: [stopAction], intentIdentifiers: [], options: [])
+        // Зарегистрируйте категории уведомления
+        UNUserNotificationCenter.current().setNotificationCategories([timerCategory])
+        // Создание контента уведомления
+        let content = UNMutableNotificationContent()
+        content.title = "BoilEasy"
+        content.body = "Timer"
+        content.categoryIdentifier = "TimerCategory" // Использование созданной категории
+        // Устанавливаем звук таймера из файла "timer_sound.mp3"
+        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
+            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+            content.sound = soundAttachment
+        } else {
+            print("Файл звука не найден.")
+        }
+        // Запланируйте и отобразите уведомление
+        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(selectedTime))
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                print("Ошибка при создании уведомления: \(error)")
+            } else {
+                print("Кастомное уведомление успешно создано.")
+            }
+        }
+    }
+    // cancel notification
+    private func cancelNotification() {
+        let identifier = "TimerNotification"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        print("Кастомное уведомление с идентификатором '\(identifier)' было отменено.")
+    }
+    // pause notification
+    private func pauseNotification() {
+        let identifier = "TimerNotification"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        print("Кастомное уведомление с идентификатором '\(identifier)' было поставлено на паузу.")
+    }
+    // scheduleNotificationWithRemainingTime
+    private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
+        print("Кастомное запланировано уведомление с оставшимся временем: \(remainingTime) секунд")
         
-        //    // запланированное уведомление
-        //    private func scheduleNotification() {
-        //        // Создание категории уведомления
-        //        let stopAction = UNNotificationAction(identifier: "StopAction", title: "Остановить", options: [])
-        //        let timerCategory = UNNotificationCategory(identifier: "TimerCategory", actions: [stopAction], intentIdentifiers: [], options: [])
-        //        // Зарегистрируйте категории уведомления
-        //        UNUserNotificationCenter.current().setNotificationCategories([timerCategory])
-        //        // Создание контента уведомления
-        //        let content = UNMutableNotificationContent()
-        //        content.title = "BoilEasy"
-        //        content.body = "Timer"
-        //        content.categoryIdentifier = "TimerCategory" // Использование созданной категории
-        //        // Устанавливаем звук таймера из файла "timer_sound.mp3"
-        //        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
-        //            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
-        //            content.sound = soundAttachment
-        //        } else {
-        //            print("Файл звука не найден.")
-        //        }
-        //        // Запланируйте и отобразите уведомление
-        //        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(timerDurations[currentIndex]))
-        //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
-        //        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
-        //        UNUserNotificationCenter.current().add(request) { (error) in
-        //            if let error = error {
-        //                print("Ошибка при создании уведомления: \(error)")
-        //            } else {
-        //                print("Уведомление успешно создано.")
-        //            }
-        //        }
-        //    }
-        //    // cancel notification
-        //    private func cancelNotification() {
-        //        let identifier = "TimerNotification"
-        //        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-        //        print("Уведомление с идентификатором '\(identifier)' было отменено.")
-        //    }
-        //    // pause notification
-        //    private func pauseNotification() {
-        //        let identifier = "TimerNotification"
-        //        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-        //        print("Уведомление с идентификатором '\(identifier)' было поставлено на паузу.")
-        //    }
-        //    // scheduleNotificationWithRemainingTime
-        //    private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
-        //        print("Запланировано уведомление с оставшимся временем: \(remainingTime) секунд")
-        //
-        //        let content = UNMutableNotificationContent()
-        //        content.title = "BoilEasy"
-        //        content.body = "Timer"
-        //        content.categoryIdentifier = "TimerCategory"
-        //
-        //        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
-        //            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
-        //            content.sound = soundAttachment
-        //        } else {
-        //            print("Файл звука не найден.")
-        //        }
-        //
-        //        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(remainingTime))
-        //        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
-        //        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
-        //
-        //        UNUserNotificationCenter.current().add(request) { (error) in
-        //            if let error = error {
-        //                print("Ошибка при создании уведомления: \(error)")
-        //            } else {
-        //                print("Уведомление успешно создано.")
-        //            }
-        //        }
-        //
+        let content = UNMutableNotificationContent()
+        content.title = "BoilEasy"
+        content.body = "Timer"
+        content.categoryIdentifier = "TimerCategory"
+        
+        if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
+            let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
+            content.sound = soundAttachment
+        } else {
+            print("Файл звука не найден.")
+        }
+        
+        let triggerDate = Date(timeIntervalSinceNow: TimeInterval(remainingTime))
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
+        let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                print("Ошибка при создании уведомления: \(error)")
+            } else {
+                print("Уведомление успешно создано.")
+            }
+        }
     }
 }
-
-// состояние кольца сбрасывается
-// лейбл часов не обновляется
