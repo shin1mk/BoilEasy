@@ -34,6 +34,8 @@ final class CustomTimerController: UIViewController {
     // Добавьте переменную для хранения времени, оставшегося до паузы
     private var pausedTime: Int?
     private var isTimerPaused: Bool = false
+    private var isDismissalAllowed = true
+
     
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
@@ -101,6 +103,7 @@ final class CustomTimerController: UIViewController {
     // Constraints
     private func setupConstraints() {
         view.backgroundColor = .systemOrange
+        timerLabel.isHidden = true
         // background image view
         view.addSubview(backgroundImageView)
         backgroundImageView.snp.makeConstraints { make in
@@ -123,7 +126,7 @@ final class CustomTimerController: UIViewController {
         view.addSubview(timerLabel)
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(pickerView.snp.bottom).offset(120)
+            make.centerY.equalToSuperview()
             make.width.equalTo(250)
         }
         // start button
@@ -242,6 +245,7 @@ extension CustomTimerController {
                 stopButtonTapped()
             }
         }
+        isDismissalAllowed = !isTimerRunning // Разрешить закрытие, если таймер не активен
         feedbackGenerator.selectionChanged() // виброотклик
     }
     // start timer func
@@ -252,6 +256,7 @@ extension CustomTimerController {
         selectedTime = (selectedHours * 3600) + (selectedMinutes * 60) + selectedSeconds
         remainingTime = selectedTime
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        timerLabel.isHidden = false // Отображать таймер
         
         startDate = Date() // Запоминаем дату и время старта таймера
         print(startDate!)
@@ -279,7 +284,7 @@ extension CustomTimerController {
         timer?.invalidate() // Остановка таймера
 
         pickerView.alpha = 1
-        timerLabel.text = "00:00:00"
+        timerLabel.isHidden = true // Отображать таймер
         hideCircleLayer()
         // если завершился таймер самостоятельно
         if remainingTime <= 0 {
@@ -290,24 +295,32 @@ extension CustomTimerController {
     }
     // pause button tapped
     @objc private func pauseButtonTapped() {
-        if isTimerRunning {
+        if isTimerRunning && !isTimerPaused {
+            // Если таймер запущен и не находится в состоянии паузы, тогда пауза
             isTimerRunning = false
             isTimerPaused = true
+            pauseButton.setTitle("RESUME", for: .normal) // Изменяем текст кнопки на "Продолжить"
             pausedTime = remainingTime // Сохраняем текущее оставшееся время
-            pauseButton.setTitle("RESUME", for: .normal)
             timer?.invalidate() // Останавливаем таймер
-            print("Timer paused at \(remainingTime) seconds") // Принт паузы
-            pauseNotification() // Отменить уведомление
+            print("Таймер приостановлен на \(remainingTime) секунд") // Принт паузы
+            cancelNotification() // Отменить уведомление
         } else if isTimerPaused {
+            // Если таймер находится в состоянии паузы, то продолжить
             isTimerRunning = true
             isTimerPaused = false
-            pauseButton.setTitle("PAUSE", for: .normal)
+            pauseButton.setTitle("PAUSE", for: .normal) // Изменяем текст кнопки на "Пауза"
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
-            print("Timer resumed with \(remainingTime) seconds remaining") // Принт возобновления
-            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // уведомление с оставшимся временем
+            // Рассчитываем разницу между текущим временем и временем паузы, чтобы обновить startDate
+            if let pausedTime = pausedTime {
+                let currentTime = Date()
+                let timeDifference = Int(currentTime.timeIntervalSince(startDate!)) - (selectedTime - pausedTime)
+                startDate = startDate?.addingTimeInterval(TimeInterval(timeDifference))
+            }
+            print("Таймер возобновлен с \(remainingTime) оставшимися секундами") // Принт возобновления
+            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Уведомление с оставшимся временем
         }
-        feedbackGenerator.selectionChanged() // виброотклик
+        feedbackGenerator.selectionChanged() // Виброотклик
     }
     // update timer label
     private func updateTimerLabel() {
@@ -455,12 +468,6 @@ extension CustomTimerController {
         let identifier = "TimerNotification"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
         print("Кастомное уведомление с идентификатором '\(identifier)' было отменено.")
-    }
-    // pause notification
-    private func pauseNotification() {
-        let identifier = "TimerNotification"
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-        print("Кастомное уведомление с идентификатором '\(identifier)' было поставлено на паузу.")
     }
     // scheduleNotificationWithRemainingTime
     private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
