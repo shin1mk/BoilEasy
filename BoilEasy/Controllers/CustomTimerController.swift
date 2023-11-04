@@ -83,6 +83,8 @@ final class CustomTimerController: UIViewController {
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
         setupPickerUI()
         setupConstraints()
         setupTarget()
@@ -257,12 +259,13 @@ extension CustomTimerController {
         remainingTime = selectedTime
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         timerLabel.isHidden = false // Отображать таймер
-        
+
         startDate = Date() // Запоминаем дату и время старта таймера
         print(startDate!)
         updateTimerLabel()
         setupCircleLayer()
         animateCircle()
+        isModalInPresentation = true
 
         hidePickerViewAnimation()
         print("Starting timer with \(selectedTime) seconds")
@@ -282,9 +285,11 @@ extension CustomTimerController {
 
         startButton.setTitle("START", for: .normal)
         timer?.invalidate() // Остановка таймера
-
+  
         pickerView.alpha = 1
         timerLabel.isHidden = true // Отображать таймер
+        isModalInPresentation = false
+
         hideCircleLayer()
         // если завершился таймер самостоятельно
         if remainingTime <= 0 {

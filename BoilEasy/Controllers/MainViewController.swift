@@ -87,13 +87,13 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         button.tintColor = UIColor.white
         return button
     }()
-    private let customStopwatchButton: UIButton = {
-        let button = UIButton()
-        let chevronImage = UIImage(systemName: "stopwatch")
-        button.setImage(chevronImage, for: .normal)
-        button.tintColor = UIColor.white
-        return button
-    }()
+//    private let customStopwatchButton: UIButton = {
+//        let button = UIButton()
+//        let chevronImage = UIImage(systemName: "stopwatch")
+//        button.setImage(chevronImage, for: .normal)
+//        button.tintColor = UIColor.white
+//        return button
+//    }()
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -231,12 +231,12 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.top.equalTo(startButton.snp.bottom).offset(5)
         }
         // customTimerButton
-        view.addSubview(customStopwatchButton)
-        customStopwatchButton.layer.zPosition = 1
-        customStopwatchButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-30)
-            make.top.equalTo(startButton.snp.bottom).offset(5)
-        }
+//        view.addSubview(customStopwatchButton)
+//        customStopwatchButton.layer.zPosition = 1
+//        customStopwatchButton.snp.makeConstraints { make in
+//            make.trailing.equalToSuperview().offset(-30)
+//            make.top.equalTo(startButton.snp.bottom).offset(5)
+//        }
     }
 } // end
 //MARK: - Array
@@ -436,7 +436,7 @@ extension MainViewController {
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
         customTimerButton.addTarget(self, action: #selector(customTimerButtonTapped), for: .touchUpInside)
-        customStopwatchButton.addTarget(self, action: #selector(customStopwatchButtonTapped), for: .touchUpInside)
+//        customStopwatchButton.addTarget(self, action: #selector(customStopwatchButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
