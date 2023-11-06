@@ -201,27 +201,27 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.width.equalTo(512)
             make.height.equalTo(512)
         }
-        // timer label
-        view.addSubview(timerLabel)
-        timerLabel.layer.zPosition = 1
-        timerLabel.snp.makeConstraints { make in
+        // pause button
+        view.addSubview(pauseButton)
+        pauseButton.layer.zPosition = 1
+        pauseButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-125)
-            make.width.equalTo(150)
+            make.bottom.equalToSuperview().inset(30)
         }
         // start button
         view.addSubview(startButton)
         startButton.layer.zPosition = 1
         startButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(timerLabel.snp.bottom).offset(5)
+            make.bottom.equalTo(pauseButton.snp.top).offset(-5)
         }
-        // pause button
-        view.addSubview(pauseButton)
-        pauseButton.layer.zPosition = 1
-        pauseButton.snp.makeConstraints { make in
+        // timer label
+        view.addSubview(timerLabel)
+        timerLabel.layer.zPosition = 1
+        timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startButton.snp.bottom).offset(5)
+            make.bottom.equalTo(startButton.snp.top).offset(-5)
+            make.width.equalTo(150)
         }
         // customTimerButton
         view.addSubview(customTimerButton)
