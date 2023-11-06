@@ -159,6 +159,21 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             let label = createDifficultyLabel(text: labelText, tag: index)
             setupConstraints(label, index: index)
             label.textColor = index == currentIndex ? .white : .systemGray
+            // Добавьте жест тапа к метке
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(difficultyLabelTapped(_:)))
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(tapGesture)
+            feedbackGenerator.selectionChanged() // Виброотклик
+        }
+    }
+    // difficultyLabelTapped
+    @objc private func difficultyLabelTapped(_ sender: UITapGestureRecognizer) {
+        if let tappedLabel = sender.view as? UILabel {
+            currentIndex = tappedLabel.tag
+            animateImage()
+            animateLabels()
+            updateTimerLabelForCurrentDifficulty()
+            feedbackGenerator.selectionChanged() // Виброотклик
         }
     }
     // update image view
@@ -176,7 +191,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         difficultyLabels.snp.makeConstraints { make in
             make.centerX.equalTo(view).offset(CGFloat(index - currentIndex) * (view.frame.width / 3))
             make.top.equalTo(view).offset(135)
-            make.width.equalTo(view)
+            make.width.equalTo(difficultyLabels.intrinsicContentSize.width) // Установите ширину метки на ширину текста
             make.height.equalTo(50)
         }
         // background image view
