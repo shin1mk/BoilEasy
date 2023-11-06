@@ -27,8 +27,8 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     private var isTimerPaused: Bool = false
 
     private var secondsRemaining = 8 * 60 // начальное время
-//    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
-    private let timerDurations = [60, 4, 15]
+    private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
+//    private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -227,8 +227,10 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         view.addSubview(customTimerButton)
         customTimerButton.layer.zPosition = 1
         customTimerButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(30)
-            make.top.equalTo(startButton.snp.bottom).offset(5)
+            make.leading.equalToSuperview().offset(10)
+            make.top.equalTo(startButton.snp.bottom).offset(-15)
+            make.width.equalTo(80)
+            make.height.equalTo(80)
         }
         // customTimerButton
 //        view.addSubview(customStopwatchButton)
@@ -257,11 +259,13 @@ extension MainViewController {
                 startTimer()
             } else {
                 // Если таймер был приостановлен, то нажатие "Старт" возобновит его
-                pauseButtonTapped()
+                stopButtonTapped()
             }
         }
         feedbackGenerator.selectionChanged() // виброотклик
         enableGestures(!isTimerRunning) // откл жесты
+        // customTimerButton отключаем ее, если таймер активен
+        customTimerButton.isEnabled = !isTimerRunning
     }
     // start Timer
     private func startTimer() {
@@ -351,6 +355,7 @@ extension MainViewController {
             setupCircleLayer()
             animateCircle()
             updateTimerLabelForCurrentDifficulty()
+            customTimerButton.isEnabled = true
         }
     }
     // updateTimerLabelForCurrentDifficulty
@@ -371,14 +376,14 @@ extension MainViewController {
         present(CustomTimerController, animated: true, completion: nil)
     }
     
-    @objc private func customStopwatchButtonTapped() {
-        print("infoButtonTapped")
+//    @objc private func customStopwatchButtonTapped() {
+//        print("infoButtonTapped")
 //        feedbackGenerator.selectionChanged() // Добавьте виброотклик
 //
 //        let CustomTimerController = CustomTimerController()
 //        CustomTimerController.modalPresentationStyle = .popover
 //        present(CustomTimerController, animated: true, completion: nil)
-    }
+//    }
 }
 //MARK: - Animation
 extension MainViewController {
