@@ -11,11 +11,6 @@ import UserNotifications
 
 final class MainViewController: UIViewController, UNUserNotificationCenterDelegate {
     private let difficultyLabels = ["Soft", "Medium", "Hard"]
-//    private let imagesForDifficulties: [String: UIImage] = [
-//        "Soft": UIImage(named: "soft.png")!,
-//        "Medium": UIImage(named: "medium.png")!,
-//        "Hard": UIImage(named: "hard.png")!
-//    ]
     private var shapeLayer: CAShapeLayer!
     private var currentProgress: Float = 1.0 //  полная окружность круга
     private var currentIndex = 1 // текущий label
@@ -69,11 +64,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-//    private let imageView: UIImageView = {
-//        let imageView = UIImageView(image: UIImage(named: "medium.png"))
-//        imageView.contentMode = .scaleAspectFill
-//        return imageView
-//    }()
+
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "background4.png")
@@ -87,20 +78,12 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         button.tintColor = UIColor.white
         return button
     }()
-//    private let customStopwatchButton: UIButton = {
-//        let button = UIButton()
-//        let chevronImage = UIImage(systemName: "stopwatch")
-//        button.setImage(chevronImage, for: .normal)
-//        button.tintColor = UIColor.white
-//        return button
-//    }()
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTarget()
         setupGestures()
         setupDifficultyLabels()
-//        updateImageView()
         updateTimerLabelForCurrentDifficulty()
         setupCircleLayer()
         notificationObserver()
@@ -173,19 +156,11 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         }
         if let tappedLabel = sender.view as? UILabel {
             currentIndex = tappedLabel.tag
-//            animateImage()
             animateLabels()
             updateTimerLabelForCurrentDifficulty()
             feedbackGenerator.selectionChanged() // Виброотклик
         }
     }
-    // update image view
-//    private func updateImageView() {
-//        if let imageName = difficultyLabels[safe: currentIndex],
-//           let image = imagesForDifficulties[imageName] {
-//            imageView.image = image
-//        }
-//    }
     // Constraints
     private func setupConstraints(_ difficultyLabels: UILabel, index: Int) {
         // difficulty labels
@@ -210,15 +185,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.centerX.equalTo(view)
             make.width.equalTo(300)
         }
-        // image view
-//        view.addSubview(imageView)
-//        imageView.layer.zPosition = 1
-//        imageView.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.centerY.equalToSuperview()
-//            make.width.equalTo(512)
-//            make.height.equalTo(512)
-//        }
         // pause button
         view.addSubview(pauseButton)
         pauseButton.layer.zPosition = 1
@@ -239,8 +205,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         timerLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
-//            make.bottom.equalTo(startButton.snp.top).offset(-5)
-//            make.width.equalTo(150)
         }
         // customTimerButton
         view.addSubview(customTimerButton)
@@ -251,13 +215,6 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.width.equalTo(80)
             make.height.equalTo(80)
         }
-        // customTimerButton
-//        view.addSubview(customStopwatchButton)
-//        customStopwatchButton.layer.zPosition = 1
-//        customStopwatchButton.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview().offset(-30)
-//            make.top.equalTo(startButton.snp.bottom).offset(5)
-//        }
     }
 } // end
 //MARK: - Array
@@ -283,7 +240,6 @@ extension MainViewController {
         }
         feedbackGenerator.selectionChanged() // виброотклик
         enableGestures(!isTimerRunning) // откл жесты
-        // customTimerButton отключаем ее, если таймер активен
         customTimerButton.isEnabled = !isTimerRunning
     }
     // start Timer
@@ -383,7 +339,6 @@ extension MainViewController {
         let seconds = timerDurations[currentIndex] % 60
         let timeString = String(format: "%02d:%02d", minutes, seconds)
         timerLabel.text = timeString
-//        updateImageView()
     }
     
     @objc private func customTimerButtonTapped() {
@@ -394,15 +349,6 @@ extension MainViewController {
         CustomTimerController.modalPresentationStyle = .popover
         present(CustomTimerController, animated: true, completion: nil)
     }
-    
-//    @objc private func customStopwatchButtonTapped() {
-//        print("infoButtonTapped")
-//        feedbackGenerator.selectionChanged() // Добавьте виброотклик
-//
-//        let CustomTimerController = CustomTimerController()
-//        CustomTimerController.modalPresentationStyle = .popover
-//        present(CustomTimerController, animated: true, completion: nil)
-//    }
 }
 //MARK: - Animation
 extension MainViewController {
@@ -424,15 +370,6 @@ extension MainViewController {
             }
         }
     }
-    // animateImage
-//    private func animateImage() {
-//        imageView.alpha = 0.0
-//        UIView.animate(withDuration: 0.5, animations: {
-//            self.imageView.alpha = 1.0
-//        }) { _ in
-//            self.updateImageView()
-//        }
-//    }
     // animatenCircle
     private func animateCircle() {
         let strokeAnimation = CABasicAnimation(keyPath: "strokeEnd")
@@ -460,7 +397,6 @@ extension MainViewController {
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
         customTimerButton.addTarget(self, action: #selector(customTimerButtonTapped), for: .touchUpInside)
-//        customStopwatchButton.addTarget(self, action: #selector(customStopwatchButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {
@@ -489,7 +425,6 @@ extension MainViewController {
         default:
             break
         }
-//        animateImage()
         animateLabels()
         updateTimerLabelForCurrentDifficulty()
         feedbackGenerator.selectionChanged() // виброотклик
