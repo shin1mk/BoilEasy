@@ -38,7 +38,7 @@ final class CustomTimerController: UIViewController {
     //MARK: Properties
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "background.png")
+        imageView.image = UIImage(named: "background6.png")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
