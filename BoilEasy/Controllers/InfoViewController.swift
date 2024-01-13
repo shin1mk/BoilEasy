@@ -14,7 +14,7 @@ final class InfoViewController: UIViewController {
    //MARK: Properties
     private let textLabel: UILabel = {
         let label = UILabel()
-        label.text = "Instruction: \n\nPrepare the pan:\nFill the pan with enough water to completely cover the eggs.\n\nHeat the water: \nBring the water to a boil over medium heat.\n\nLower the eggs into the boiling water: \nCarefully lower the eggs into the boiling water using a spoon.\n\nCook the eggs: \nReduce the heat to medium and cook the eggs in the boiling water. \n\nSet timer:\n5 minutes for runny yolks,\n7 minutes for medium doneness,\n10 minutes for fully cooked eggs.\n\nCool the eggs: \nAfter cooking, transfer the eggs to cold water or an ice bath."
+        label.text = "textLabel".localized()
         label.font = UIFont.SFUITextRegular(ofSize: 14)
         label.textColor = .white
         label.numberOfLines = 0
@@ -22,14 +22,14 @@ final class InfoViewController: UIViewController {
     }()
     private let likeLabel: UILabel = {
         let label = UILabel()
-        label.text = "If you like our app:"
+        label.text = "likeLabel".localized()
         label.font = UIFont.SFUITextRegular(ofSize: 16)
         label.textColor = .white
         return label
     }()
     private let shareButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Share app", for: .normal)
+        button.setTitle("shareButton".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextMedium(ofSize: 16)
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .systemGray6
@@ -38,8 +38,7 @@ final class InfoViewController: UIViewController {
     }()
     private let rateButton: UIButton = {
         let button = UIButton()
-//        button.setTitle("rate_text".localized(), for: .normal)
-        button.setTitle("⭐️ Rate app", for: .normal)
+        button.setTitle("rateButton".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextMedium(ofSize: 16)
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .systemGray6
@@ -48,7 +47,7 @@ final class InfoViewController: UIViewController {
     }()
     private let supportButton: UIButton = {
         let button = UIButton()
-        button.setTitle("☕️ Support us", for: .normal)
+        button.setTitle("supportButton".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextMedium(ofSize: 16)
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .systemGray6
@@ -57,7 +56,7 @@ final class InfoViewController: UIViewController {
     }()
     private let letterButton: UIButton = {
         let button = UIButton()
-        button.setTitle("✉️ Write to us", for: .normal)
+        button.setTitle("letterButton".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextMedium(ofSize: 16)
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .systemGray6
@@ -74,7 +73,6 @@ final class InfoViewController: UIViewController {
         view.backgroundColor = .clear
         return view
     }()
-    private let subtractImageView = UIImageView(image: UIImage(named: "subtract")) // line
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
@@ -83,6 +81,7 @@ final class InfoViewController: UIViewController {
     
     private func setupConstraints() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.9)
+
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

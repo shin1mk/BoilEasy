@@ -38,7 +38,7 @@ final class CustomTimerController: UIViewController {
     //MARK: Properties
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Create custom timer"
+        label.text = "customLabel".localized()
         label.font = UIFont.SFUITextHeavy(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
@@ -55,20 +55,20 @@ final class CustomTimerController: UIViewController {
     }()
     private let startButton: UIButton = {
         let startButton = UIButton()
-        startButton.setTitle("START", for: .normal)
+        startButton.setTitle("start".localized(), for: .normal)
         startButton.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         return startButton
     }()
     private let pauseButton: UIButton = {
         let button = UIButton()
-        button.setTitle("PAUSE", for: .normal)
+        button.setTitle("pause".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 20)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     private let stopButton: UIButton = {
         let button = UIButton()
-        button.setTitle("STOP", for: .normal)
+        button.setTitle("stop".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         button.setTitleColor(.white, for: .normal)
         return button
@@ -245,7 +245,7 @@ extension CustomTimerController {
         remainingTime = selectedTime
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         
-        startButton.setTitle("STOP", for: .normal)
+        startButton.setTitle("stop".localized(), for: .normal)
         startDate = Date() // Запоминаем дату и время старта таймера
         
         updateTimerLabel()
@@ -267,7 +267,7 @@ extension CustomTimerController {
         pickerView.alpha = 1
         timer?.invalidate() // Остановка таймера
         
-        startButton.setTitle("START", for: .normal)
+        startButton.setTitle("start".localized(), for: .normal)
 
         hideCircleLayer()
         // если завершился таймер самостоятельно
@@ -277,52 +277,20 @@ extension CustomTimerController {
             cancelNotification() // Удалить уведомление, если таймер остановлен вручную
         }
     }
-//    // pause button tapped
-//    @objc private func pauseButtonTapped() {
-//        if isTimerRunning && !isTimerPaused {
-//            // Если таймер запущен и не находится в состоянии паузы, тогда ставим паузу
-//            isTimerRunning = false
-//            isTimerPaused = true
-//
-//            pausedTime = remainingTime // Сохраняем текущее оставшееся время
-//            pauseButton.setTitle("RESUME", for: .normal)
-//            timer?.invalidate() // Останавливаем таймер
-//
-//            cancelNotification() // Отменить уведомление
-//        } else if isTimerPaused {
-//            // Если таймер находится в состоянии паузы, то продолжить
-//            isTimerRunning = true
-//            isTimerPaused = false
-//            pauseButton.setTitle("PAUSE", for: .normal) // Изменяем текст кнопки на "Пауза"
-//
-//            startTimer(withRemainingTime: pausedTime) // Восстанавливаем таймер с сохраненным временем
-//            // Рассчитываем разницу между текущим временем и временем паузы, чтобы обновить startDate
-////            if let pausedTime = pausedTime {
-////                let currentTime = Date()
-////                let timeDifference = pausedTime - remainingTime
-////                startDate = currentTime.addingTimeInterval(-TimeInterval(timeDifference))
-////            }
-//
-//            scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Уведомление с оставшимся временем
-//
-//            print("Таймер приостановлен на \(remainingTime) секунд") // Принт паузы
-//            print("Таймер возобновлен с \(remainingTime) оставшимися секундами") // Принт возобновления
-//        }
-//        feedbackGenerator.selectionChanged() // Виброотклик
-//    }
+    
     @objc private func pauseButtonTapped() {
         if isTimerRunning && !isTimerPaused {
             isTimerRunning = false
             isTimerPaused = true
             pausedTime = remainingTime // Сохраняем текущее оставшееся время
-            pauseButton.setTitle("RESUME", for: .normal)
+            pauseButton.setTitle("resume".localized(), for: .normal)
             timer?.invalidate() // Останавливаем таймер
             cancelNotification() // Отменить уведомление
         } else if isTimerPaused {
             // Если таймер находится в состоянии паузы, то продолжить
             isTimerRunning = true
             isTimerPaused = false
-            pauseButton.setTitle("PAUSE", for: .normal) // Изменяем текст кнопки на "Пауза"
+            pauseButton.setTitle("pause".localized(), for: .normal) // Изменяем текст кнопки на "Пауза"
             startTimer(withRemainingTime: pausedTime) // Восстанавливаем таймер с сохраненным временем
             // Рассчитываем разницу между текущим временем и временем паузы, чтобы обновить startDate
             scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // Уведомление с оставшимся временем

@@ -28,7 +28,7 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "How to boil eggs easy?"
+        label.text = "titleLabel".localized()
         label.font = UIFont.SFUITextHeavy(ofSize: 35)
         label.textAlignment = .center
         label.textColor = .white
@@ -45,21 +45,21 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     }()
     private let startButton: UIButton = {
         let button = UIButton()
-        button.setTitle("START", for: .normal)
+        button.setTitle("start".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     private let pauseButton: UIButton = {
         let button = UIButton()
-        button.setTitle("PAUSE", for: .normal)
+        button.setTitle("pause".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 20)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
     private let stopButton: UIButton = {
         let button = UIButton()
-        button.setTitle("STOP", for: .normal)
+        button.setTitle("stop".localized(), for: .normal)
         button.titleLabel?.font = UIFont.SFUITextHeavy(ofSize: 30)
         button.setTitleColor(.white, for: .normal)
         return button
@@ -260,7 +260,7 @@ extension MainViewController {
     // start Timer
     private func startTimer() {
         isTimerRunning = true
-        startButton.setTitle("STOP", for: .normal)
+        startButton.setTitle("stop".localized(), for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
 
@@ -281,7 +281,7 @@ extension MainViewController {
         isTimerRunning = false
         isTimerPaused = false // Сбрасываем состояние паузы
 
-        startButton.setTitle("START", for: .normal)
+        startButton.setTitle("start".localized(), for: .normal)
         timer?.invalidate() // Остановка таймера
         // Сбросить значение таймера на начальное
         secondsRemaining = timerDurations[currentIndex]
@@ -301,13 +301,13 @@ extension MainViewController {
             isTimerRunning = false
             isTimerPaused = true
             pausedTime = secondsRemaining // Сохраняем текущее оставшееся время
-            pauseButton.setTitle("RESUME", for: .normal)
+            pauseButton.setTitle("resume".localized(), for: .normal)
             timer?.invalidate() // Останавливаем таймер
             pauseNotification() // Отменить уведомление
         } else if isTimerPaused {
             isTimerRunning = true
             isTimerPaused = false
-            pauseButton.setTitle("PAUSE", for: .normal)
+            pauseButton.setTitle("pause".localized(), for: .normal)
             // Восстанавливаем таймер с сохраненным временем
             startTimer(withRemainingTime: pausedTime)
             scheduleNotificationWithRemainingTime(remainingTime: pausedTime!) // новое уведомление с оставшимся временем
