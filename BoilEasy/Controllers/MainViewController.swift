@@ -64,16 +64,22 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "background4.png")
+        imageView.image = UIImage(named: "background1.png")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     private let customTimerButton: UIButton = {
         let button = UIButton()
         let chevronImage = UIImage(systemName: "timer")
+        button.setImage(chevronImage, for: .normal)
+        button.tintColor = UIColor.white
+        return button
+    }()
+    private let infoButton: UIButton = {
+        let button = UIButton()
+        let chevronImage = UIImage(systemName: "info.circle")
         button.setImage(chevronImage, for: .normal)
         button.tintColor = UIColor.white
         return button
@@ -215,6 +221,15 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
             make.width.equalTo(80)
             make.height.equalTo(80)
         }
+        // infoButton
+        view.addSubview(infoButton)
+        infoButton.layer.zPosition = 1
+        infoButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.top.equalTo(startButton.snp.bottom).offset(-15)
+            make.width.equalTo(80)
+            make.height.equalTo(80)
+        }
     }
 } // end
 //MARK: - Array
@@ -342,10 +357,18 @@ extension MainViewController {
     }
     
     @objc private func customTimerButtonTapped() {
-        print("infoButtonTapped")
+        print("customButtonTapped")
         feedbackGenerator.selectionChanged() // Добавьте виброотклик
         
         let CustomTimerController = CustomTimerController()
+        CustomTimerController.modalPresentationStyle = .popover
+        present(CustomTimerController, animated: true, completion: nil)
+    }    
+    @objc private func infoButtonTapped() {
+        print("infoButtonTapped")
+        feedbackGenerator.selectionChanged() // Добавьте виброотклик
+        
+        let CustomTimerController = InfoViewController()
         CustomTimerController.modalPresentationStyle = .popover
         present(CustomTimerController, animated: true, completion: nil)
     }
@@ -397,6 +420,7 @@ extension MainViewController {
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
         customTimerButton.addTarget(self, action: #selector(customTimerButtonTapped), for: .touchUpInside)
+        infoButton.addTarget(self, action: #selector(infoButtonTapped), for: .touchUpInside)
     }
     // enableGestures
     private func enableGestures(_ enabled: Bool) {

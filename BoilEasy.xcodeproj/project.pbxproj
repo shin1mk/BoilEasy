@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1342FEC72B527C8E00FB6AD6 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1342FEC62B527C8E00FB6AD6 /* InfoViewController.swift */; };
 		134CC2CF2AE121D200D1C8C8 /* text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134CC2CE2AE121D200D1C8C8 /* text.swift */; };
 		139057132ABA5D7C00EF40FE /* CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139057122ABA5D7B00EF40FE /* CustomFonts.swift */; };
 		139057192ABA5DB700EF40FE /* SFUIText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 139057142ABA5DB600EF40FE /* SFUIText-Medium.ttf */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1342FEC62B527C8E00FB6AD6 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		134CC2CE2AE121D200D1C8C8 /* text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = text.swift; sourceTree = "<group>"; };
 		1353CA138CFD587DEEA68788 /* Pods_BoilEasy_BoilEasyUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BoilEasy_BoilEasyUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		139057122ABA5D7B00EF40FE /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			children = (
 				13E3D4882AB8BD55004B13C7 /* MainViewController.swift */,
 				139B409E2AEE9A2E00FC426E /* CustomTimerController.swift */,
+				1342FEC62B527C8E00FB6AD6 /* InfoViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -480,6 +483,7 @@
 				13E3D4542AB8BCB1004B13C7 /* SceneDelegate.swift in Sources */,
 				139057132ABA5D7C00EF40FE /* CustomFonts.swift in Sources */,
 				139B409F2AEE9A2E00FC426E /* CustomTimerController.swift in Sources */,
+				1342FEC72B527C8E00FB6AD6 /* InfoViewController.swift in Sources */,
 				13E3D4892AB8BD55004B13C7 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

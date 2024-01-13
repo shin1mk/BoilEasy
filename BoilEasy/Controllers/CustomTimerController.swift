@@ -36,12 +36,6 @@ final class CustomTimerController: UIViewController {
     private var pausedTime: Int?
     private var isTimerPaused: Bool = false
     //MARK: Properties
-    private let backgroundImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "background6.png")
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Create custom timer"
@@ -101,13 +95,8 @@ final class CustomTimerController: UIViewController {
     }
     // Constraints
     private func setupConstraints() {
-        view.backgroundColor = .systemOrange
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.9)
         timerLabel.isHidden = true
-        // background image view
-        view.addSubview(backgroundImageView)
-        backgroundImageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
         // title label
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
