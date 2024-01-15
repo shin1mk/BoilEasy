@@ -20,10 +20,10 @@ final class MainViewController: UIViewController, UNUserNotificationCenterDelega
     // Добавьте переменную для хранения времени, оставшегося до паузы
     private var pausedTime: Int?
     private var isTimerPaused: Bool = false
-
+    
     private var secondsRemaining = 8 * 60 // начальное время
     private let timerDurations = [300, 420, 600] // Soft - 5  минут, Medium - 7 минут, Hard - 10 минут
-//    private let timerDurations = [60, 4, 15]
+    //    private let timerDurations = [60, 4, 15]
     private let feedbackGenerator = UISelectionFeedbackGenerator()
     
     private let titleLabel: UILabel = {
@@ -256,6 +256,7 @@ extension MainViewController {
         feedbackGenerator.selectionChanged() // виброотклик
         enableGestures(!isTimerRunning) // откл жесты
         customTimerButton.isEnabled = !isTimerRunning
+        infoButton.isEnabled = !isTimerRunning
     }
     // start Timer
     private func startTimer() {
@@ -263,7 +264,7 @@ extension MainViewController {
         startButton.setTitle("stop".localized(), for: .normal)
         secondsRemaining = timerDurations[currentIndex] // Используйте продолжительность для текущей сложности
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-
+        
         startDate = Date() // Запоминаем текущую дату при старте таймера
         updateTimerLabel()
         animateCircle()
@@ -280,12 +281,14 @@ extension MainViewController {
     @objc private func stopButtonTapped() {
         isTimerRunning = false
         isTimerPaused = false // Сбрасываем состояние паузы
-
+        
         startButton.setTitle("start".localized(), for: .normal)
         timer?.invalidate() // Остановка таймера
         // Сбросить значение таймера на начальное
         secondsRemaining = timerDurations[currentIndex]
         print("Setting secondsRemaining to \(timerDurations[currentIndex])")
+        
+        pauseButton.setTitle("pause".localized(), for: .normal)
         // Обновить времени
         updateTimerLabelForCurrentDifficulty()
         // Сбросить состояние круга + animation
@@ -315,7 +318,7 @@ extension MainViewController {
         enableGestures(isTimerRunning)
         feedbackGenerator.selectionChanged() // виброотклик
     }
- 
+    
     // updateTimerLabel
     private func updateTimerLabel() {
         let minutes = secondsRemaining / 60
@@ -327,7 +330,7 @@ extension MainViewController {
         currentProgress = 1.0 - (remainingTime / totalDuration)
         animateProgress(1.0 - currentProgress)
     }
-   // обновление секунд при возврате
+    // обновление секунд при возврате
     private func updateSecondsRemaining() {
         if let startDate = startDate {
             let currentTime = Date()
@@ -363,7 +366,7 @@ extension MainViewController {
         let CustomTimerController = CustomTimerController()
         CustomTimerController.modalPresentationStyle = .popover
         present(CustomTimerController, animated: true, completion: nil)
-    }    
+    }
     @objc private func infoButtonTapped() {
         print("infoButtonTapped")
         feedbackGenerator.selectionChanged() // Добавьте виброотклик
@@ -513,23 +516,23 @@ extension MainViewController {
     // scheduleNotificationWithRemainingTime
     private func scheduleNotificationWithRemainingTime(remainingTime: Int) {
         print("Запланировано уведомление с оставшимся временем: \(remainingTime) секунд")
-
+        
         let content = UNMutableNotificationContent()
         content.title = "BoilEasy"
         content.body = "Timer"
         content.categoryIdentifier = "TimerCategory"
-
+        
         if Bundle.main.url(forResource: "timer_sound", withExtension: "mp3") != nil {
             let soundAttachment = UNNotificationSound(named: UNNotificationSoundName(rawValue: "timer_sound.mp3"))
             content.sound = soundAttachment
         } else {
             print("Файл звука не найден.")
         }
-
+        
         let triggerDate = Date(timeIntervalSinceNow: TimeInterval(remainingTime))
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: triggerDate.timeIntervalSinceNow, repeats: false)
         let request = UNNotificationRequest(identifier: "TimerNotification", content: content, trigger: trigger)
-
+        
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
                 print("Ошибка при создании уведомления: \(error)")

@@ -268,6 +268,7 @@ extension CustomTimerController {
         timer?.invalidate() // Остановка таймера
         
         startButton.setTitle("start".localized(), for: .normal)
+        pauseButton.setTitle("pause".localized(), for: .normal)
 
         hideCircleLayer()
         // если завершился таймер самостоятельно

@@ -122,16 +122,16 @@ final class InfoViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        contentView.addSubview(supportButton)
-        supportButton.snp.makeConstraints { make in
-            make.top.equalTo(rateButton.snp.bottom).offset(15)
-            make.leading.trailing.equalToSuperview().inset(15)
-            make.height.equalTo(40)
-        }
+//        contentView.addSubview(supportButton)
+//        supportButton.snp.makeConstraints { make in
+//            make.top.equalTo(rateButton.snp.bottom).offset(15)
+//            make.leading.trailing.equalToSuperview().inset(15)
+//            make.height.equalTo(40)
+//        }
         
         contentView.addSubview(letterButton)
         letterButton.snp.makeConstraints { make in
-            make.top.equalTo(supportButton.snp.bottom).offset(15)
+            make.top.equalTo(rateButton.snp.bottom).offset(15)
             make.leading.trailing.equalToSuperview().inset(15)
             make.height.equalTo(40)
             make.bottom.equalToSuperview().offset(-10)
