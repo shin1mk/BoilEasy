@@ -7,7 +7,7 @@
 */
 
 //MARK: InfoViewConctroller
-"textLabel" = "Instruction: \n\nPrepare the pan:\nFill the pan with enough water to completely cover the eggs.\n\nHeat the water: \nBring the water to a boil over medium heat.\n\nLower the eggs into the boiling water: \nCarefully lower the eggs into the boiling water using a spoon.\n\nCook the eggs: \nReduce the heat to medium and cook the eggs in the boiling water. \n\nSet timer:\n5 minutes for runny yolks,\n7 minutes for medium doneness,\n10 minutes for fully cooked eggs.\n\nCool the eggs: \nAfter cooking, transfer the eggs to cold water or an ice bath.";
+"textLabel" = "Instruction: \n\nPrepare the pan:\nFill the pan with enough water to completely cover the eggs.\n\nHeat the water: \nBring the water to a boil over medium heat.\n\nLower the eggs into the boiling water: \nCarefully lower the eggs into the boiling water using a spoon.\n\nCook the eggs: \nReduce the heat to medium and cook the eggs in the boiling water. \n\nSet timer:\n5 minutes for runny yolks,\n7 minutes for medium doneness,\n10 minutes for fully cooked eggs.\n\nCool the eggs: \nAfter cooking, transfer the eggs to cold water.";
 "likeLabel" = "If you like our app:";
 "shareButton" = "Share app";
 "rateButton" = "⭐️ Rate app";
